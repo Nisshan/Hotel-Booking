@@ -1,0 +1,54 @@
+{
+    "fields": [
+        {
+            "name": "title",
+            "type": "string"
+        },
+        {
+            "name": "description",
+            "type": "text"
+        },
+        {
+            "name" : "image",
+            "type" : "file"
+        },
+        {
+            "name": "category",
+            "type": "select",
+            "options": {
+                "single-room": "Single Room",
+                "double-room": "Double Room",
+                "deluxe": "Deluxe"
+            }
+        },
+        {
+            "name": "user_id",
+            "type": "integer#unsigned"
+        }
+    ],
+    "foreign_keys": [
+        {
+            "column": "user_id",
+            "references": "id",
+            "on": "users",
+            "onDelete": "cascade"
+        }
+    ],
+    "relationships": [
+        {
+            "name": "user",
+            "type": "belongsTo",
+            "class": "App\\User"
+        }
+    ],
+    "validations": [
+        {
+            "field": "title",
+            "rules": "required|"
+        },
+        {
+            "field" : "description",
+            "rules" : "required"
+        }
+    ]
+}
