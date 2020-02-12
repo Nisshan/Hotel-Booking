@@ -30,6 +30,7 @@
                         </div>
                     </div>
                 </div>
+                @include('flash::message')
                 <div class="card-body">
                     <form action="{{ route('bookingroom.store')}}" method="POST" id="formid" enctype=multipart/form-data>
                         @csrf
@@ -80,7 +81,8 @@
 
                         <div class="form-group">
                             <label for="room_number">Room No</label>
-                            <select class="form-control" name="room_id">
+                            <select class="form-control" name="room_id" required>
+                                <option value=" ">{{'Select Room'}}</option>
                                 @foreach($rooms as $room)
                                     <option value="{{$room->id}}">{{$room->room_no}}</option>
                                 @endforeach

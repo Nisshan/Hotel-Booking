@@ -36,11 +36,22 @@ return [
                     'group' => 'site',
                 ],
                 [
-                    'name' => 'Home Cover',
+                    'name' => 'favicon',
+                    'type' => 'image',
+                    'label' => 'Upload favicon',
+                    'hint' => 'create favicon using favicon-generator.org and upload that image here',
+                    'disk' => 'public', // which disk you want to upload
+                    'path' => 'app', // path on the disk,
+                    'preview_class' => 'thumbnail',
+                    'preview_style' => 'height:40px',
+                    'class' => 'form-control',
+                    'group' => 'site',
+                ],
+                [
+                    'name' => 'home-image',
                     'type' => 'image',
                     'label' => 'Upload Home Cover',
                     'hint' => 'Must be an image and cropped in desired size',
-                    'rules' => 'image|max:500',
                     'disk' => 'public', // which disk you want to upload
                     'path' => 'app', // path on the disk,
                     'preview_class' => 'home image',
@@ -49,24 +60,34 @@ return [
                     'group' => 'site',
                 ],
                 [
-                    'name' => 'Room Cover',
+                    'name' => 'room-cover',
                     'type' => 'image',
-                    'label' => 'Upload Room cover',
-                    'hint' => 'Must be an image and cropped in desired size',
-                    'rules' => 'image|max:500',
-                    'disk' => 'public', // which disk you want to upload
-                    'path' => 'app', // path on the disk,
-                    'preview_class' => 'home image',
+                    'label' => 'Rooms Cover',
+                    'hint' => 'must be an image of desired size',
+                    'disk' => 'public',
+                    'path' => 'app',
+                    'preview_class' => 'rooms Image',
                     'preview_style' => 'height:40px',
                     'class' => 'form-control',
-                    'group' => 'site',
+                    'group' => 'site'
                 ],
                 [
-                    'name' => 'Service Cover',
+                    'name' => 'service-cover',
                     'type' => 'image',
-                    'label' => 'Upload Service cover',
+                    'label' => 'Service Cover',
+                    'hint' => 'must be an image of desired size',
+                    'disk' => 'public',
+                    'path' => 'app',
+                    'preview_class' => 'service-cover',
+                    'preview_style' => 'height:40px',
+                    'class' => 'form-control',
+                    'group' => 'site'
+                ],
+                [
+                    'name' => 'place-image',
+                    'type' => 'image',
+                    'label' => 'Upload Place Cover',
                     'hint' => 'Must be an image and cropped in desired size',
-                    'rules' => 'image|max:500',
                     'disk' => 'public', // which disk you want to upload
                     'path' => 'app', // path on the disk,
                     'preview_class' => 'home image',
@@ -84,10 +105,39 @@ return [
                     'placeholder' => 'Description about Your Hotel',
                 ],
                 [
-                    'name' => 'Map Setup',
+                    'name' => 'room-description',
+                    'type' => 'textarea',
+                    'row' => 5,
+                    'column' => 5,
+                    'label' => 'Description about Rooms',
+                    'class' => 'form-control',
+                    'placeholder' => 'Description about Your Hotel Rooms',
+
+                ],
+                [
+                    'name' => 'service-description',
+                    'type' => 'textarea',
+                    'row' => 5,
+                    'column' => 5,
+                    'label' => 'Description about Services',
+                    'class' => 'form-control',
+                    'placeholder' => 'Description about Your Services',
+                ],
+                [
+                    'name' => 'place-description',
+                    'type' => 'textarea',
+                    'row' => 5,
+                    'column' => 5,
+                    'label' => 'Description about Places',
+                    'class' => 'form-control',
+                    'placeholder' => 'Description about Places Near your Hotel',
+                ],
+                [
+                    'name' => 'mapframe',
                     'type' => 'textarea',
                     'label' => 'Map Location',
                     'hint' => 'this is your location in google. Copy your map embed code and paste here',
+                    'value' => 'map is not attached now',
                 ]
             ]
         ],
@@ -108,7 +158,7 @@ return [
                 [
                     'name' => 'twitter_link',
                     'type' => 'text',
-                    'label' => 'twitter Account',
+                    'label' => 'Twitter Account',
                     'placeholder' => 'Twitter Account Link',
                     'class' => 'form-control',
                 ],
@@ -211,53 +261,82 @@ return [
 
             'inputs' => [
                 [
-                    'name' => 'Room Accommodation',
+                    'name' => 'about',
+                    'label' => 'About',
+                    'type' => 'boolean',
+                    'value' => true,
+                    'class' => 'w-auto'
+                ],
+                [
+                    'name' => 'rooms',
                     'label' => 'Room Accommodation',
                     'type' => 'boolean',
                     'value' => true,
                     'class' => 'w-auto'
                 ],
                 [
-                    'name' => 'Facilities',
+                    'name' => 'service',
                     'label' => 'Services',
                     'type' => 'boolean',
                     'value' => true,
                     'class' => 'w-auto'
                 ],
                 [
-                    'name' => 'Near By place to Visit',
+                    'name' => 'places',
                     'label' => 'Near By place to Visit',
                     'type' => 'boolean',
                     'value' => true,
                     'class' => 'w-auto'
                 ],
                 [
-                    'name' => 'Testimonial',
+                    'name' => 'testimonial',
                     'label' => 'Testimonial',
                     'type' => 'boolean',
                     'value' => true,
                     'class' => 'w-auto'
                 ],
                 [
-                    'name' => 'Map',
+                    'name' => 'map',
                     'label' => 'Map',
                     'type' => 'boolean',
                     'value' => true,
                     'class' => 'w-auto'
                 ],
                 [
-                    'name' => 'Footer',
+                    'name' => 'footer',
                     'label' => 'Footer',
                     'type' => 'boolean',
                     'value' => true,
                     'class' => 'w-auto'
                 ],
+                [
+                    'name' => 'show-room-desc',
+                    'label' => 'Room Description',
+                    'type' => 'boolean',
+                    'value' => true,
+                    'class' => 'w-auto'
+                ],
+                [
+                    'name' => 'show-service-desc',
+                    'label' => 'Service Description',
+                    'type' => 'boolean',
+                    'value' => true,
+                    'class' => 'w-auto'
+                ],
+                [
+                    'name' => 'show-place-desc',
+                    'label' => 'Place Description',
+                    'type' => 'boolean',
+                    'value' => true,
+                    'class' => 'w-auto'
+                ],
+
 
             ]
         ]
     ],
     // Setting page url, will be used for get and post request
-    'url' => 'settings',
+    'url' => '/settings',
 
     // Any middleware you want to run on above route
     'middleware' => ['auth'],

@@ -3,6 +3,7 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Spatie\Image\Exceptions\InvalidManipulation;
 use Spatie\MediaLibrary\HasMedia\HasMedia;
 use Spatie\MediaLibrary\HasMedia\HasMediaTrait;
@@ -25,5 +26,13 @@ class Room extends Model implements HasMedia
         $this->addMediaConversion('thumb')
             ->width(200)
             ->height(200);
+    }
+
+    /**
+     * @return HasMany
+     */
+    public function booking()
+    {
+        return $this->hasMany(BookRoom::class,'room_id')->where('status',1);
     }
 }

@@ -12,6 +12,7 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\View\View;
+use Psy\Util\Str;
 use Spatie\MediaLibrary\Exceptions\FileCannotBeAdded\DiskDoesNotExist;
 use Spatie\MediaLibrary\Exceptions\FileCannotBeAdded\FileDoesNotExist;
 use Spatie\MediaLibrary\Exceptions\FileCannotBeAdded\FileIsTooBig;
@@ -112,6 +113,7 @@ class RoomController extends Controller
         $room->price = $request->price;
         $room->capacity = $request->capacity;
         $room->room_no = $request->room_no;
+        $room->slug = Str::slug($request->room_no);
         $room->addMediaFromRequest('cover')
             ->toMediaCollection('room-cover');
 

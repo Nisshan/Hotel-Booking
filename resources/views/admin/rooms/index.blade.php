@@ -44,7 +44,7 @@
                 serverSide: true,
                 iDisplayLength: 20,
                 retrieve: true,
-                ajax: '{{ url('getRooms') }}',
+                ajax: '{{ url('admin/getRooms') }}',
                 columns: [
                     {data: "id", name: 'id'},
                     {data: 'type', name: 'type'},

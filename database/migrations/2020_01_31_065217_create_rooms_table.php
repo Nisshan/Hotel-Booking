@@ -23,6 +23,7 @@ class CreateRoomsTable extends Migration
             $table->integer('capacity');
             $table->boolean('status')->default(1);
             $table->integer('user_id')->unsigned();
+            $table->text('slug')->unique();
             $table->timestamps();
         });
     }

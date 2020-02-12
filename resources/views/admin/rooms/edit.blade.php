@@ -44,6 +44,7 @@
                             <input type="file" placeholder="image" name="images[]" multiple class="form-control">
                         </div>
                         <div class="form-group">
+                            <label>{{__('Room Type')}}</label>
                             <select class="form-control" name="type" required>
                                 @foreach(config('rooms_type.types') as $type)
                                     <option
@@ -70,8 +71,12 @@
                         </div>
 
                         <div class="form-group">
-                            <label for="facilities">{{__('Price')}}</label>
+                            <label for="price">{{__('Price')}}</label>
                             <input type="number" class="form-control" name="price" required value="{{$room->price}}" placeholder="Price">
+                        </div>
+                        <div class="form-group">
+                            <label for="room_no">{{__('Room No')}}</label>
+                            <input type="text" class="form-control" name="room_no" required value="{{$room->room_no}}" placeholder="Room No">
                         </div>
                         <div class="form-group">
                             <label for="facilities">{{__('Capacity')}}</label>

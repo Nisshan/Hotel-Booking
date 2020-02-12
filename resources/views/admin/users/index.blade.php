@@ -48,7 +48,7 @@
                 serverSide: true,
                 iDisplayLength: 20,
                 retrieve: true,
-                ajax: '{{ url('getUsers') }}',
+                ajax: '{{ url('admin/getUsers') }}',
                 columns: [
                     {data: "id", name: 'id'},
                     {data: 'name', name: 'name'},

@@ -10,6 +10,7 @@ use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\View\View;
+use Psy\Util\Str;
 use Spatie\MediaLibrary\Exceptions\FileCannotBeAdded\DiskDoesNotExist;
 use Spatie\MediaLibrary\Exceptions\FileCannotBeAdded\FileDoesNotExist;
 use Spatie\MediaLibrary\Exceptions\FileCannotBeAdded\FileIsTooBig;
@@ -105,6 +106,7 @@ class PlacesController extends Controller
         }
         $place = new Place;
         $place->name = $request->name;
+        $place->slug = Str::slug($request->name);
         $place->description = $request->description;
         $place->travel_description = $request->travel_description;
         $place->user_id = auth()->id();

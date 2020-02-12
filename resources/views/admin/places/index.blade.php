@@ -44,7 +44,7 @@
                 serverSide: true,
                 iDisplayLength: 20,
                 retrieve: true,
-                ajax: '{{ url('getPlaces') }}',
+                ajax: '{{ url('admin/getPlaces') }}',
                 columns: [
                     {data: "id", name: 'id'},
                     {data: 'name', name: 'name'},

@@ -12,18 +12,28 @@
 */
 
 use Illuminate\Support\Facades\Auth;
+//Route::get('/', function () {
+//    return view('welcome');
+//});
 
-Route::get('/', function () {
-    return view('welcome');
-});
+
+Route::get('/', 'Frontend\HomeController@index')->name('home');
+Route::get('/rooms','Frontend\SiteController@rooms')->name('rooms');
+Route::get('/services','Frontend\SiteController@services')->name('services');
+Route::get('/places','Frontend\SiteController@places')->name('places');
+Route::get('/rooms/{room_no}','Frontend\SiteController@singleRoom')->name('single.room');
+Route::get('/places/{name}','Frontend\SiteController@visitPlace')->name('single.place');
+Route::get('/service/{name}','Frontend\SiteController@servicePage')->name('single.service');
 
 //Route::get('create','Frontend\BookingController@create')->name('book.room');
 //Route::post('update/{id}','BookingController@update')->name('room.create');
 
 Route::resource('bookingroom','Frontend\BookingController');
 
-Auth::routes();
+Route::group(['prefix'=>'admin/'],function (){
+    Auth::routes();
 Route::group(['middleware' => 'auth'], function () {
+
     Route::resource('users', 'Admin\UserController');
     Route::get('getUsers', 'Admin\UserController@getUsers');
 
@@ -49,4 +59,5 @@ Route::group(['middleware' => 'auth'], function () {
 
     Route::get('/images/latest', 'ImageGalleryController@getLatestImage')->name('latest.image');
     Route::get('/images/search/{searchTerm}', 'ImageGalleryController@searchImage')->name('images.search');
+});
 });

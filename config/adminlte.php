@@ -138,7 +138,7 @@ return [
 
     'logout_url' => 'logout',
 
-    'login_url' => 'login',
+    'login_url' => 'admin/login',
 
     'register_url' => false,
 
@@ -177,35 +177,35 @@ return [
         ['header' => 'General'],
         [
             'text' => 'Rooms',
-            'url' =>'rooms',
+            'url' =>'admin/rooms',
             'icon' => 'fas fa-hotel'
         ],
         [
             'text' => 'Places',
-            'url' => 'places',
+            'url' => 'admin/places',
             'icon' => 'fa fa-location-arrow'
         ],
         [
             'text' => 'Testimony',
-            'url' => 'testimonials',
+            'url' => 'admin/testimonials',
             'icon' => 'fa fa-eye'
         ],
         [
             'text' => 'Services',
-            'url' => 'services',
+            'url' => 'admin/services',
             'icon' => ''
         ],
 
         ['header' => 'Roles And Permissions'],
         [
             'text' => 'Users',
-            'url'  => 'users',
+            'url'  => 'admin/users',
             'icon' => 'fas fa-fw fa-user',
             'can' => 'create_user'
         ],
         [
             'text' => 'Roles',
-            'url'  => 'roles',
+            'url'  => 'admin/roles',
             'icon' => 'fas fa-fw fa-lock',
         ],
         [

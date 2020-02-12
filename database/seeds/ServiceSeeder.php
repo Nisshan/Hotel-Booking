@@ -18,7 +18,7 @@ class ServiceSeeder extends Seeder
         $services = factory(Service::class,10)->create();
         $imageUrl = 'https://i.picsum.photos/id/237/200/300.jpg';
         foreach ($services as $service){
-            $service->addMediaFromUrl($imageUrl)->toMediaCollection('service');
+            $service->addMediaFromUrl($imageUrl)->toMediaCollection('services');
         }
     }
 }

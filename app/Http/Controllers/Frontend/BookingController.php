@@ -51,9 +51,10 @@ class BookingController extends Controller
         $book->name = $request->name;
         $book->email = $request->email;
         $book->number = $request->number;
-        $book->address = $request->address;
+        $book->address = $request->address ? $request->address : 'Itahari';
         $book->room_id = $request->room_id;
         $book->save();
+        flash('Thank You We will reply you shortly')->success();
         return back();
 
     }

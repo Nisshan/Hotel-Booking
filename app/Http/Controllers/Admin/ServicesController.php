@@ -121,7 +121,7 @@ class ServicesController extends Controller
         if(!Gate::allows('view_service')){
             return abort(401);
         }
-        $image = $service->getFirstMedia('services')->getUrl('thumb');
+        $image = $service->getFirstMedia('service')->getUrl('thumb');
         return view('admin.services.view',compact('service','image'));
     }
 

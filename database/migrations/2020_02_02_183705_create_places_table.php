@@ -23,6 +23,7 @@ class CreatePlacesTable extends Migration
             $table->text('travel_description');
             $table->integer('user_id')->unsigned();
             $table->boolean('status')->default(1);
+            $table->string('slug')->unique();
             $table->timestamps();
         });
     }
