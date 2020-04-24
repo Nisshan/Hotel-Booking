@@ -35,7 +35,7 @@
                         @csrf
                         <div class="form-group">
                             <label for="cover">Cover</label>
-                            <input type="file" name="cover" class="form-control" id="cover" >
+                            <input type="file" name="cover" class="form-control" id="cover">
                         </div>
                         <div class="form-group">
                             <label for="images">Images</label>
@@ -45,13 +45,14 @@
                             <label for="type"> Room Type</label>
                             <select class="form-control" name="type" required>
                                 @foreach(config('rooms_type.types') as $types)
-                                     <option value="{{$types}}">{{$types}}</option>
+                                    <option value="{{$types}}">{{$types}}</option>
                                 @endforeach
                             </select>
                         </div>
                         <div class="form-group">
                             <label for="room_no">{{__('Room no')}}</label>
-                            <input type="text" class="form-control" name="room_no" required value="{{old('room_no')}}" id="room_no">
+                            <input type="text" class="form-control" name="room_no" required value="{{old('room_no')}}"
+                                   id="room_no">
                         </div>
                         <div class="form-group">
                             <label for="description">{{__('description')}}</label>
@@ -63,11 +64,13 @@
                         </div>
                         <div class="form-group">
                             <label for="facilities">{{__('Price')}}</label>
-                            <input type="number" class="form-control" name="price" required value="{{old('price')}}" placeholder="Price">
+                            <input type="number" class="form-control" name="price" required value="{{old('price')}}"
+                                   placeholder="Price">
                         </div>
                         <div class="form-group">
                             <label for="facilities">{{__('Capacity')}}</label>
-                            <input type="number" class="form-control" name="capacity" required value="{{old('capacity')}}" placeholder="No of People that can live">
+                            <input type="number" class="form-control" name="capacity" required
+                                   value="{{old('capacity')}}" placeholder="No of People that can live">
                         </div>
                         <div class="form-group">
                             <button type="submit" class="btn btn-success">{{__('Submit')}}</button>
@@ -77,6 +80,16 @@
             </div>
         </div>
     </div>
+@endsection
+
+@section('js')
+    <script src="https://cdn.jsdelivr.net/npm/smartwizard@4.4.1/dist/js/jquery.smartWizard.min.js" type="text/javascript"></script>
+
+    <script>
+        $(document).ready(function(){
+            $('#smartwizard').smartWizard();
+        });
+    </script>
 @endsection
 
 
