@@ -2,8 +2,8 @@
 <section id="nearbySection">
     <div class="near-by" data-aos="fade-up">
         <div class="near-by-title">
-            <p>{{__('Near By')}}</p>
-            <h5>{{__('Places To')}} <span class="green-text">{{__('Visit')}}</span></h5>
+            <p>{{__('lang.Near_By')}}</p>
+            <h5>{{__('lang.Places_to')}} <span class="green-text">{{__('lang.Visit')}}</span></h5>
         </div>
         @foreach($places as $key => $place)
             @if($key == 0)

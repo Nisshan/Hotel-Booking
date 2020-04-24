@@ -19,7 +19,7 @@
                 <div class="card-header">
                     <div class="row mb-2">
                         <div class="col-sm-6 card-title">
-                            <h1 class="m-0 text-dark">{{__('Places')}}</h1>
+                            <h1 class="m-0 text-dark">{{__('Place')}}</h1>
                         </div>
                         <div class="col-sm-6">
                             <ol class="breadcrumb float-sm-right">
@@ -39,7 +39,7 @@
                         </div>
                         <div class="form-group">
                             <label for="description">{{__('Description')}}</label>
-                            <textarea class="form-control" placeholder="Description of Place"
+                            <textarea class="form-control" placeholder="{{__('Description_of_Place')}}"
                                       name="description" id="description"
                                       required>{{old('description')}}</textarea>
                         </div>

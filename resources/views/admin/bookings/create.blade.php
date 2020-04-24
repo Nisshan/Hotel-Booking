@@ -20,7 +20,7 @@
                 <div class="card-header">
                     <div class="row mb-2">
                         <div class="col-sm-6 card-title">
-                            <h1 class="m-0 text-dark">{{__('Rooms Booking')}}</h1>
+                            <h1 class="m-0 text-dark">{{__('Rooms_Booking')}}</h1>
                         </div>
                         <div class="col-sm-6">
                             <ol class="breadcrumb float-sm-right">
@@ -35,7 +35,7 @@
                         @csrf
                         <div class="row">
                             <div class="form-group col-md-6">
-                                <label for="date">From</label>
+                                <label for="date">{{__('From')}}</label>
                                 <div class="input-group date " id="datetimepicker1" data-target-input="nearest" >
                                     <input type="text" class="form-control datetimepicker-input"
                                            data-target="#datetimepicker1" name="date_from"/>
@@ -46,7 +46,7 @@
                                 </div>
                             </div>
                             <div class="form-group col-md-6">
-                                <label for="date">To</label>
+                                <label for="date">{{__('To')}}</label>
                                 <div class="input-group date " id="datetimepicker2" data-target-input="nearest">
                                     <input type="text" class="form-control datetimepicker-input"
                                            data-target="#datetimepicker2" name="date_to"/>
@@ -58,7 +58,7 @@
                             </div>
                         </div>
                         <div class="form-group col-md-6">
-                            <label for="room_number">Room No</label>
+                            <label for="room_number">{{__('Room_No')}}</label>
                             <select class="form-control" name="room_id">
                                 @foreach($rooms as $room)
                                     <option value="{{$room->id}}">{{$room->room_no}}</option>

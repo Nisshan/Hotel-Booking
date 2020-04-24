@@ -46,8 +46,8 @@
 {{--    </div>--}}
     <div class="about-us" style="width: 100%">
         <div>
-            <p style="text-align: center">{{__('ABOUT US')}}</p>
-            <h4 style="text-align: center">{{__('A Few Words')}}<span class="green-text"> {{__('About Us')}} </span></h4>
+            <p style="text-align: center">{{__('lang.About_Us')}}</p>
+            <h4 style="text-align: center">{{__('lang.A_Few_Words')}}<span class="green-text"> {{__('lang.About_Us')}} </span></h4>
             <p style="text-align: center">
                 {{setting('about_us')}}
             </p>

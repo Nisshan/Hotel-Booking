@@ -5,7 +5,7 @@
         <div class="section no-pad-bot">
             <div class="header-container">
                 <h1 class="header center" data-aos="fade-in">
-                    Sunkoshi Hotel & Lodge
+                    {{setting('app_name')}}
                 </h1>
             </div>
         </div>
@@ -16,6 +16,8 @@
             />
         </div>
     </div>
+    @include('frontend.sites.search')
+
     @if(setting('about') == 1)
         @include('frontend.sites.about-us')
     @endif

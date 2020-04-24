@@ -7,6 +7,7 @@ use App\Http\Controllers\Controller;
 use App\Room;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Mail;
 
 /**
  * Class BookingController
@@ -55,6 +56,19 @@ class BookingController extends Controller
         $book->room_id = $request->room_id;
         $book->save();
         flash('Thank You We will reply you shortly')->success();
+        $data = Room::findorFail($request->room_id);
+
+        Mail::send('mail.receive-mail',
+            array(
+                'name' => $request->name,
+                'number' => $request->number,
+                'email' => $request->email,
+                'from' => $request->date_from,
+                'to' => $request->date_to,
+                'room_no' => $data->room_no
+             ), function ($message) {
+                $message->to('timsinanishan1@gmail.com');
+            });
         return back();
 
     }

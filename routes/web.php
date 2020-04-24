@@ -18,6 +18,8 @@ use Illuminate\Support\Facades\Auth;
 
 
 Route::get('/', 'Frontend\HomeController@index')->name('home');
+Route::get('/available','Frontend\SearchController@search')->name('available.rooms');
+Route::post('/available','Frontend\SearchController@search')->name('rooms.available');
 Route::get('/rooms','Frontend\SiteController@rooms')->name('rooms');
 Route::get('/services','Frontend\SiteController@services')->name('services');
 Route::get('/places','Frontend\SiteController@places')->name('places');
@@ -33,6 +35,8 @@ Route::resource('bookingroom','Frontend\BookingController');
 Route::group(['prefix'=>'admin/'],function (){
     Auth::routes();
 Route::group(['middleware' => 'auth'], function () {
+
+    Route::get('/dashboard','Admin\DashboardController@index')->name('dashboard');
 
     Route::resource('users', 'Admin\UserController');
     Route::get('getUsers', 'Admin\UserController@getUsers');
@@ -56,8 +60,10 @@ Route::group(['middleware' => 'auth'], function () {
     Route::get('getServices', 'Admin\ServicesController@getServices');
 
     Route::resource('booking','Admin\RoomBookingController');
+    Route::get('getBookedRoom','Admin\RoomBookingController@getBookedRoom');
 
     Route::get('/images/latest', 'ImageGalleryController@getLatestImage')->name('latest.image');
     Route::get('/images/search/{searchTerm}', 'ImageGalleryController@searchImage')->name('images.search');
+
 });
 });

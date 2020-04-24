@@ -248,6 +248,7 @@ return [
                     'name' => 'security',
                     'type' => 'select',
                     'label' => 'security',
+                    'value' => 'tls',
                     'options' => ['tls', 'ssl'],
 
                 ]

@@ -5,7 +5,7 @@
     <i class="fa fa-trash"
        data-toggle="tooltip"
        data-placement="top" title=""
-       data-original-title="Delete">Delete</i>
+       data-original-title="Delete">{{__('Delete')}}</i>
     <form action="{{$route}}"
           method="POST" name="delete_item" style="display:none">
         @csrf

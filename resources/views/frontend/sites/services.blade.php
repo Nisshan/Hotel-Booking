@@ -1,7 +1,7 @@
 <section>
     <div class="facilities-title" data-aos="fade-up">
-        <p>{{__('Facilities/Services')}}</p>
-        <h5>{{__('Our Hotel')}} <span class="green-text"> {{__('Facilities')}}</span></h5>
+        <p>{{__('lang.Facilities_Services')}}</p>
+        <h5>{{__('lang.Our_Hotel')}} <span class="green-text"> {{__('lang.Facilities')}}</span></h5>
     </div>
 
     <div id="facilities" class="owl-carousel owl-theme">
@@ -20,6 +20,6 @@
         @endforeach
     </div>
     <div class="view-all">
-        <a href="/" class="btn">{{__('View All')}}</a>
+        <a href="/" class="btn">{{__('lang.View_All')}}</a>
     </div>
 </section>

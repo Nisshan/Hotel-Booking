@@ -195,7 +195,11 @@ return [
             'url' => 'admin/services',
             'icon' => ''
         ],
-
+        [
+            'text' => 'Booking',
+            'url' => 'admin/booking',
+            'icon' => 'bookmark-outline'
+        ],
         ['header' => 'Roles And Permissions'],
         [
             'text' => 'Users',

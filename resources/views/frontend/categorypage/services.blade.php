@@ -4,7 +4,7 @@
         <div class="section no-pad-bot">
             <div class="header-container">
                 <h1 class="header center">
-                    {{__('Our Facilities and ')}}<span class="green-text"> {{__('Services')}}</span>
+                    {{__('lang.Our_Facilities_and')}}<span class="green-text"> {{__('lang.Services')}}</span>
                 </h1>
                 <div class="row center">
                     <h5 class="header col s12 light"></h5>
@@ -40,7 +40,7 @@
                        {{$service->description}}
                     </p>
                     <a href="{{route('single.service',[$service->name])}}"
-                       class="further-details">{{__('More Details')}}</a>
+                       class="further-details">{{__('More_Details')}}</a>
                 </div>
                 @if($key % 2 == 1)
                     <div class="room-image">

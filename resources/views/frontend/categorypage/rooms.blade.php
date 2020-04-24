@@ -4,7 +4,7 @@
         <div class="section no-pad-bot">
             <div class="header-container">
                 <h1 class="header center">
-                    {{__('Room')}} <span class="green-text">{{__(' Accommodation')}}</span>
+                    {{__('lang.Room')}} <span class="green-text">{{__('lang.Accommodation')}}</span>
                 </h1>
             </div>
         </div>
@@ -33,11 +33,11 @@
                     <p>
                         {{$room->description}}
                     </p>
-                    <h6>{{__('Capacity')}} : {{$room->capacity}}</h6>
-                    <h6>{{__('Price')}} : {{__('Rs')}} {{$room->price}}</h6>
-                    <h6> {{__('Room Number')}} : {{$room->room_no}}</h6>
+                    <h6>{{__('lang.Capacity')}} : {{$room->capacity}}</h6>
+                    <h6>{{__('lang.Price')}} : {{__('lang.Rs')}} {{$room->price}}</h6>
+                    <h6> {{__('lang.Room_No')}} : {{$room->room_no}}</h6>
                     <a href="{{route('single.room',[$room->room_no])}}"
-                       class="further-details">{{__('More Details')}}</a>
+                       class="further-details">{{__('lang.More_Details')}}</a>
                 </div>
                 @if($key % 2 == 0)
                     <div class="room-image">
