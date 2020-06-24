@@ -21,13 +21,13 @@
         rel="stylesheet"
         href="http://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css"
     />
+
     <link
         href="{{asset('frontend/css/style.min.css')}}"
         type="text/css"
         rel="stylesheet"
         media="screen,projection"
     />
-    <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/4.3.5/css/bootstrap.min.css">
 
     @yield('css')
 </head>

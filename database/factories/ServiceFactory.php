@@ -10,6 +10,7 @@ $factory->define(Service::class, function (Faker $faker) {
     return [
         'name' => $faker->word,
         'description' => $faker->paragraph,
-        'user_id' => \App\User::all()->random()->id
+        'user_id' => \App\User::all()->random()->id,
+        'slug' => $faker->slug
     ];
 });

@@ -13,6 +13,7 @@ $factory->define(Place::class, function (Faker $faker) {
         'description' =>$faker->sentence,
         'travel_description' => $faker->sentence,
         'user_id' => User::all()->random()->id,
+        'slug' => $faker->slug
 
     ];
 });

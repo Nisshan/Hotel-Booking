@@ -15,5 +15,6 @@ $factory->define(Room::class, function (Faker $faker) {
         'price' => rand(800,2500),
         'capacity' => rand(2,6),
         'room_no' => $faker->unique()->numberBetween(1,10),
+        'slug' => $faker->slug
     ];
 });
