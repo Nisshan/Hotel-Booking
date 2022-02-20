@@ -4,7 +4,8 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Illuminate\Database\Eloquent\Relations\HasOne;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+
 
 /**
  * Class BookRoom
@@ -12,6 +13,7 @@ use Illuminate\Database\Eloquent\Relations\HasOne;
  */
 class BookRoom extends Model
 {
+    use HasFactory;
     /**
      * @return BelongsTo
      */

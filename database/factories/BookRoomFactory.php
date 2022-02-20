@@ -1,21 +1,27 @@
 <?php
 
-/** @var \Illuminate\Database\Eloquent\Factory $factory */
+namespace Database\Factories;
 
-use App\BookRoom;
 use App\Room;
 use Carbon\Carbon;
-use Faker\Generator as Faker;
+use Illuminate\Database\Eloquent\Factories\Factory;
+use App\BookRoom;
 
-$factory->define(BookRoom::class, function (Faker $faker) {
-    return [
-        'from' => Carbon::now('+05:45'),
-        'to' => Carbon::now('+05:45')->addDay(),
-        'email' => $faker->safeEmail,
-        'number' => $faker->phoneNumber,
-        'name' => $faker->name,
-        'address' => $faker->address,
-        'room_id' => Room::all()->random()->id,
-        'status' => rand(0,1)
-    ];
-});
+class BookRoomFactory extends Factory
+{
+    protected $model = BookRoom::class;
+
+    public function definition()
+    {
+        return [
+            'from' => Carbon::now('+05:45'),
+            'to' => Carbon::now('+05:45')->addDay(),
+            'email' => $this->faker->safeEmail,
+            'number' => $this->faker->phoneNumber,
+            'name' => $this->faker->name,
+            'address' => $this->faker->address,
+            'room_id' => Room::all()->random()->id,
+            'status' => rand(0, 1)
+        ];
+    }
+}

@@ -1,16 +1,25 @@
 <?php
+namespace Database\Factories;
 
-/** @var \Illuminate\Database\Eloquent\Factory $factory */
 
 use App\Testimonial;
 use App\User;
-use Faker\Generator as Faker;
+use Illuminate\Database\Eloquent\Factories\Factory;
 
-$factory->define(Testimonial::class, function (Faker $faker) {
-    return [
-        'name' => $faker->name,
-        'description' => $faker->sentence,
-        'status' => 1,
-        'user_id' => User::all()->random()->id
-    ];
-});
+
+class TestimonialFactory extends Factory
+{
+    protected $model = Testimonial::class;
+
+    public function definition()
+    {
+        return [
+            'name' => $this->faker->name,
+            'description' => $this->faker->sentence,
+            'status' => 1,
+            'user_id' => User::all()->random()->id
+        ];
+    }
+
+
+}

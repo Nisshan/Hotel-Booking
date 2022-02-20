@@ -1,19 +1,24 @@
 <?php
 
-/** @var \Illuminate\Database\Eloquent\Factory $factory */
+namespace Database\Factories;
 
-use App\Model;
 use App\Place;
 use App\User;
-use Faker\Generator as Faker;
+use Illuminate\Database\Eloquent\Factories\Factory;
 
-$factory->define(Place::class, function (Faker $faker) {
-    return [
-        'name' => $faker->city,
-        'description' =>$faker->sentence,
-        'travel_description' => $faker->sentence,
-        'user_id' => User::all()->random()->id,
-        'slug' => $faker->slug
 
-    ];
-});
+class PlaceFactory extends Factory
+{
+    protected $model = Place::class;
+
+    public function definition()
+    {
+        return [
+            'name' => $this->faker->city,
+            'description' =>$this->faker->sentence,
+            'travel_description' => $this->faker->sentence,
+            'user_id' => User::all()->random()->id,
+            'slug' => $this->faker->slug
+        ];
+    }
+}

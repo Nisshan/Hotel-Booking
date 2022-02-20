@@ -1,14 +1,24 @@
 <?php
 
-/** @var \Illuminate\Database\Eloquent\Factory $factory */
+namespace Database\Factories;
+
 
 use App\ImageGallery;
-use Faker\Generator as Faker;
+use Illuminate\Database\Eloquent\Factories\Factory;
 
-$factory->define(ImageGallery::class, function (Faker $faker) {
-    return [
-        'title' => $faker->word,
-        'description' => $faker->sentence,
-        'photo_by' => $faker->name,
-    ];
-});
+
+class ImageGalleryFactory extends Factory
+{
+
+    protected $model = ImageGallery::class;
+
+    public function definition()
+    {
+        return [
+            'title' => $this->faker->word,
+            'description' => $this->faker->sentence,
+            'photo_by' => $this->faker->name,
+        ];
+    }
+}
+

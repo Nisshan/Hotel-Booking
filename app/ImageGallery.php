@@ -3,20 +3,24 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
-use Spatie\MediaLibrary\HasMedia\HasMedia;
-use Spatie\MediaLibrary\HasMedia\HasMediaTrait;
-use Spatie\MediaLibrary\Models\Media;
+use Spatie\MediaLibrary\HasMedia;
+use Spatie\MediaLibrary\InteractsWithMedia;
+use Spatie\MediaLibrary\MediaCollections\Models\Media;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+
 
 
 class ImageGallery extends Model implements HasMedia
 {
-    use HasMediaTrait;
+    use HasFactory;
+    use InteractsWithMedia;
 
-    public function registerMediaConversions(Media $media = null )
+    public function registerMediaConversions(Media $media = null): void
     {
         $this->addMediaConversion('thumb')
-            ->width('300')
-            ->height('200');
+            ->width(368)
+            ->height(232)
+            ->sharpen(10);
     }
 
 }

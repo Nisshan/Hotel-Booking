@@ -10,6 +10,7 @@ use App\Testimonial;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
+use Spatie\MediaLibrary\MediaCollections\Models\Media;
 
 /**
  * Class HomeController

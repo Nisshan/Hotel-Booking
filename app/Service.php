@@ -3,10 +3,10 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
-use Spatie\Image\Exceptions\InvalidManipulation;
-use Spatie\MediaLibrary\HasMedia\HasMedia;
-use Spatie\MediaLibrary\HasMedia\HasMediaTrait;
-use Spatie\MediaLibrary\Models\Media;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Spatie\MediaLibrary\InteractsWithMedia;
+use Spatie\MediaLibrary\HasMedia;
+use Spatie\MediaLibrary\MediaCollections\Models\Media;
 
 /**
  * Class Service
@@ -14,13 +14,11 @@ use Spatie\MediaLibrary\Models\Media;
  */
 class Service extends Model implements HasMedia
 {
-    use HasMediaTrait;
+    use HasFactory;
+    use InteractsWithMedia;
 
-    /**
-     * @param Media|null $media
-     * @throws InvalidManipulation
-     */
-    public function registerMediaConversions(Media $media = null)
+
+    public function registerMediaConversions(Media $media = null): void
     {
         $this->addMediaConversion('thumb')
             ->width(200)
