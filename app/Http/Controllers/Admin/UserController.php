@@ -34,6 +34,7 @@ class UserController extends Controller
         if (auth()->user()->can('delete_user')) {
             $has_delete = true;
         }
+
         return DataTables::of(User::query())
             ->addColumn('actions', function ($user) use ($has_view, $has_edit, $has_delete) {
                 $view = "";
@@ -53,10 +54,10 @@ class UserController extends Controller
                         ->with(['route' => route('users.destroy', ['user' => $user->id])])->render();
                     $view .= $delete;
                 }
+
                 return $view;
             })->rawColumns(['actions'])
             ->make('true');
-
     }
 
     /**
@@ -66,9 +67,10 @@ class UserController extends Controller
      */
     public function index()
     {
-        if(!Gate::allows('create_user')){
+        if (! Gate::allows('create_user')) {
             return abort(401);
         }
+
         return view('admin.users.index');
     }
 
@@ -79,9 +81,10 @@ class UserController extends Controller
      */
     public function create()
     {
-        if(!Gate::allows('create_user')){
+        if (! Gate::allows('create_user')) {
             return abort(401);
         }
+
         return view('admin.users.create');
     }
 
@@ -93,7 +96,7 @@ class UserController extends Controller
      */
     public function store(Request $request)
     {
-        if(!Gate::allows('create_user')){
+        if (! Gate::allows('create_user')) {
             return abort(401);
         }
         $request->validate([
@@ -101,12 +104,13 @@ class UserController extends Controller
             'email' => 'required |unique:users',
             'password' => 'required | min:6 | confirmed',
         ]);
-        $user = new User;
+        $user = new User();
         $user->name = $request->name;
         $user->email = $request->email;
         $user->password = bcrypt($request->password);
         $user->save();
         flash('User Created')->success();
+
         return redirect()->action('Admin\UserController@index');
     }
 
@@ -118,11 +122,12 @@ class UserController extends Controller
      */
     public function show(User $user)
     {
-        if(!Gate::allows('view_user')){
+        if (! Gate::allows('view_user')) {
             return abort(401);
         }
         $abilities = $user->getAbilities();
-        return view('admin.users.view',compact('user','abilities'));
+
+        return view('admin.users.view', compact('user', 'abilities'));
     }
 
     /**
@@ -133,10 +138,11 @@ class UserController extends Controller
      */
     public function edit(User $user)
     {
-        if(!Gate::allows('edit_user')){
+        if (! Gate::allows('edit_user')) {
             return abort(401);
         }
         $roles = Role::all();
+
         return view('admin.users.edit', compact('user', 'roles'));
     }
 
@@ -149,7 +155,7 @@ class UserController extends Controller
      */
     public function update(User $user, Request $request)
     {
-        if(!Gate::allows('edit_user')){
+        if (! Gate::allows('edit_user')) {
             return abort(401);
         }
         $request->validate([
@@ -162,6 +168,7 @@ class UserController extends Controller
             $user->password = bcrypt($request->password);
         } else {
             flash(__('password and confirm password did not match'))->error();
+
             return redirect()->action('Admin\UserController@edit', [$user->id]);
         }
         $user->save();
@@ -171,6 +178,7 @@ class UserController extends Controller
             $user->assign($request->role);
         }
         flash('User Info Updated')->success();
+
         return redirect()->action('Admin\UserController@index');
     }
 
@@ -183,12 +191,14 @@ class UserController extends Controller
      */
     public function destroy(User $user)
     {
-        if(!Gate::allows('delete_user')){
+        if (! Gate::allows('delete_user')) {
             flash('Not Authorized To delete User')->error();
+
             return back();
         }
         $user->delete();
         flash('User Deleted')->important('User Deleted');
+
         return back();
     }
 }

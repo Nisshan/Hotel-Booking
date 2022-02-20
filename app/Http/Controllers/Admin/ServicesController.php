@@ -4,7 +4,6 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Service;
-use App\Testimonial;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -37,6 +36,7 @@ class ServicesController extends Controller
         if (auth()->user()->can('delete_users')) {
             $has_delete = true;
         }
+
         return DataTables::of(Service::query())
             ->addColumn('actions', function ($service) use ($has_view, $has_edit, $has_delete) {
                 $view = "";
@@ -56,10 +56,10 @@ class ServicesController extends Controller
                         ->with(['route' => route('services.destroy', ['service' => $service->id])])->render();
                     $view .= $delete;
                 }
+
                 return $view;
             })->rawColumns(['actions'])
             ->make('true');
-
     }
 
     /**
@@ -69,9 +69,10 @@ class ServicesController extends Controller
      */
     public function index()
     {
-        if(!Gate::allows('view_service')){
+        if (! Gate::allows('view_service')) {
             return abort(401);
         }
+
         return view('admin.services.index');
     }
 
@@ -82,9 +83,10 @@ class ServicesController extends Controller
      */
     public function create()
     {
-        if(!Gate::allows('create_service')){
+        if (! Gate::allows('create_service')) {
             return abort(401);
         }
+
         return view('admin.services.create');
     }
 
@@ -96,10 +98,10 @@ class ServicesController extends Controller
      */
     public function store(Request $request)
     {
-        if(!Gate::allows('create_service')){
+        if (! Gate::allows('create_service')) {
             return abort(401);
         }
-        $service = new Service;
+        $service = new Service();
         $service->name = $request->name;
         $service->description = $request->description;
         $service->addMediaFromRequest('cover')
@@ -107,6 +109,7 @@ class ServicesController extends Controller
         $service->user_id = auth()->id();
         $service->save();
         flash('created Successfully');
+
         return redirect()->action('Admin\ServicesController@index');
     }
 
@@ -118,11 +121,12 @@ class ServicesController extends Controller
      */
     public function show(Service $service)
     {
-        if(!Gate::allows('view_service')){
+        if (! Gate::allows('view_service')) {
             return abort(401);
         }
         $image = $service->getFirstMedia('service')->getUrl('thumb');
-        return view('admin.services.view',compact('service','image'));
+
+        return view('admin.services.view', compact('service', 'image'));
     }
 
     /**
@@ -133,11 +137,12 @@ class ServicesController extends Controller
      */
     public function edit(Service $service)
     {
-        if(!Gate::allows('edit_service')){
+        if (! Gate::allows('edit_service')) {
             return abort(401);
         }
         $image = $service->getFirstMedia('service')->getUrl('thumb');
-        return view('admin.services.edit',compact('service','image'));
+
+        return view('admin.services.edit', compact('service', 'image'));
     }
 
     /**
@@ -152,13 +157,14 @@ class ServicesController extends Controller
         $service->name = $request->name;
         $service->description = $request->description;
         $service->status = $request->status;
-        if($request->cover){
+        if ($request->cover) {
             $service->getFirstMedia('service')->delete();
             $service->addMediaFromRequest('cover')
                 ->toMediaCollection('service');
         }
         $service->save();
         flash('Created Successfully')->success();
+
         return redirect()->action('Admin\ServicesController@index');
     }
 
@@ -171,12 +177,14 @@ class ServicesController extends Controller
      */
     public function destroy(Service $service)
     {
-        if(!Gate::allows('delete_service')){
+        if (! Gate::allows('delete_service')) {
             flash('You are Not authorized to perform this action')->error();
+
             return back();
         }
         $service->delete();
         flash('Deleted Success')->important();
+
         return back();
     }
 }

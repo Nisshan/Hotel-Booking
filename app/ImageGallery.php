@@ -2,13 +2,11 @@
 
 namespace App;
 
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Spatie\MediaLibrary\HasMedia;
 use Spatie\MediaLibrary\InteractsWithMedia;
 use Spatie\MediaLibrary\MediaCollections\Models\Media;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
-
-
 
 class ImageGallery extends Model implements HasMedia
 {
@@ -22,5 +20,4 @@ class ImageGallery extends Model implements HasMedia
             ->height(232)
             ->sharpen(10);
     }
-
 }

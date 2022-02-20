@@ -19,13 +19,14 @@ class SearchController extends Controller
      * @param Request $request
      * @return Factory|View
      */
-    public function search(Request $request){
+    public function search(Request $request)
+    {
 //        dd($request);
         $time_from = Carbon::parse($request->from)->toDateTime();
-        $time_to =  Carbon::parse($request->to)->toDateTime();
+        $time_to = Carbon::parse($request->to)->toDateTime();
 
         if ($request->isMethod('POST')) {
-            $rooms = Room::with('booking','media')->where('status',1)->whereHas('booking', function ($q) use ($time_from, $time_to) {
+            $rooms = Room::with('booking', 'media')->where('status', 1)->whereHas('booking', function ($q) use ($time_from, $time_to) {
                 $q->where(function ($q2) use ($time_from, $time_to) {
                     $q2->where('from', '>=', $time_to)
                         ->orWhere('to', '<=', $time_from);
@@ -34,6 +35,7 @@ class SearchController extends Controller
         } else {
             $rooms = null;
         }
-        return view('frontend.search.available',compact('rooms','time_from','time_to'));
+
+        return view('frontend.search.available', compact('rooms', 'time_from', 'time_to'));
     }
 }

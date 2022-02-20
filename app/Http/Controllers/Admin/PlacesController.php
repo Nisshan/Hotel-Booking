@@ -40,6 +40,7 @@ class PlacesController extends Controller
         if (auth()->user()->can('delete_place')) {
             $has_delete = true;
         }
+
         return DataTables::of(Place::query())
             ->addColumn('actions', function ($place) use ($has_view, $has_edit, $has_delete) {
                 $view = "";
@@ -59,6 +60,7 @@ class PlacesController extends Controller
                         ->with(['route' => route('places.destroy', ['place' => $place->id])])->render();
                     $view .= $delete;
                 }
+
                 return $view;
             })->rawColumns(['actions'])
             ->make('true');
@@ -71,9 +73,10 @@ class PlacesController extends Controller
      */
     public function index()
     {
-        if (!Gate::allows('view_place')) {
+        if (! Gate::allows('view_place')) {
             return abort(401);
         }
+
         return view('admin.places.index');
     }
 
@@ -84,9 +87,10 @@ class PlacesController extends Controller
      */
     public function create()
     {
-        if (!Gate::allows('create_place')) {
+        if (! Gate::allows('create_place')) {
             return abort(401);
         }
+
         return view('admin.places.create');
     }
 
@@ -101,10 +105,10 @@ class PlacesController extends Controller
      */
     public function store(Request $request)
     {
-        if (!Gate::allows('create_place')) {
+        if (! Gate::allows('create_place')) {
             return abort(401);
         }
-        $place = new Place;
+        $place = new Place();
         $place->name = $request->name;
         $place->slug = Str::slug($request->name);
         $place->description = $request->description;
@@ -119,6 +123,7 @@ class PlacesController extends Controller
         }
         $place->save();
         flash('Created Successfull')->success();
+
         return redirect()->action('Admin\PlacesController@index');
     }
 
@@ -130,10 +135,11 @@ class PlacesController extends Controller
      */
     public function show(Place $place)
     {
-        if (!Gate::allows('view_place')) {
+        if (! Gate::allows('view_place')) {
             return abort(401);
         }
         $images = $place->getMedia('places');
+
         return view('admin.places.view', compact('place', 'images'));
     }
 
@@ -145,9 +151,10 @@ class PlacesController extends Controller
      */
     public function edit(Place $place)
     {
-        if (!Gate::allows('edit_place')) {
+        if (! Gate::allows('edit_place')) {
             return abort(401);
         }
+
         return view('admin.places.edit', compact('place'));
     }
 
@@ -163,7 +170,7 @@ class PlacesController extends Controller
      */
     public function update(Request $request, Place $place)
     {
-        if (!Gate::allows('edit_place')) {
+        if (! Gate::allows('edit_place')) {
             return abort(401);
         }
         $place->name = $request->name;
@@ -184,6 +191,7 @@ class PlacesController extends Controller
         }
         $place->save();
         flash('Updated Successfully')->success();
+
         return redirect()->action('Admin\PlacesController@index');
     }
 
@@ -196,12 +204,14 @@ class PlacesController extends Controller
      */
     public function destroy(Place $place)
     {
-        if (!Gate::allows('delete_place')) {
+        if (! Gate::allows('delete_place')) {
             flash('Not Authorized To delete Place')->error();
+
             return back();
         }
         $place->delete();
         flash('Deleted Successfully')->important();
+
         return back();
     }
 }

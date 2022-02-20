@@ -2,14 +2,11 @@
 
 namespace Database\Factories;
 
-
 use App\ImageGallery;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
-
 class ImageGalleryFactory extends Factory
 {
-
     protected $model = ImageGallery::class;
 
     public function definition()
@@ -21,4 +18,3 @@ class ImageGalleryFactory extends Factory
         ];
     }
 }
-

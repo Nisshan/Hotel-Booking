@@ -34,6 +34,7 @@ class TestimonialController extends Controller
         if (auth()->user()->can('delete_testimony')) {
             $has_delete = true;
         }
+
         return DataTables::of(Testimonial::query())
             ->addColumn('actions', function ($testimony) use ($has_view, $has_edit, $has_delete) {
                 $view = "";
@@ -53,10 +54,10 @@ class TestimonialController extends Controller
                         ->with(['route' => route('testimonials.destroy', [ $testimony->id])])->render();
                     $view .= $delete;
                 }
+
                 return $view;
             })->rawColumns(['actions'])
             ->make('true');
-
     }
 
     /**
@@ -66,9 +67,10 @@ class TestimonialController extends Controller
      */
     public function index()
     {
-        if(!Gate::allows('create_testimony')){
+        if (! Gate::allows('create_testimony')) {
             return abort(401);
         }
+
         return view('admin.testimonies.index');
     }
 
@@ -79,9 +81,10 @@ class TestimonialController extends Controller
      */
     public function create()
     {
-        if(!Gate::allows('create_testimony')){
+        if (! Gate::allows('create_testimony')) {
             return abort(401);
         }
+
         return view('admin.testimonies.create');
     }
 
@@ -96,16 +99,17 @@ class TestimonialController extends Controller
      */
     public function store(Request $request)
     {
-        if(!Gate::allows('create_testimony')){
+        if (! Gate::allows('create_testimony')) {
             return abort(401);
         }
-        $testimony = new Testimonial;
+        $testimony = new Testimonial();
         $testimony->name = $request->name;
         $testimony->description = $request->description;
         $testimony->addMediaFromRequest('image')
             ->toMediaCollection('testimony');
         $testimony->save();
         flash('Created Successfully')->success();
+
         return redirect()->action('Admin\TestimonialController@index');
     }
 
@@ -117,10 +121,11 @@ class TestimonialController extends Controller
      */
     public function show(Testimonial $testimonial)
     {
-        if(!Gate::allows('view_testimony')){
+        if (! Gate::allows('view_testimony')) {
             return abort(401);
         }
         $image = $testimonial->getFirstMedia('testimony')->getUrl('thumb');
+
         return view('admin.testimonies.view', compact('testimonial', 'image'));
     }
 
@@ -132,10 +137,11 @@ class TestimonialController extends Controller
      */
     public function edit(Testimonial $testimonial)
     {
-        if(!Gate::allows('edit_testimony')){
+        if (! Gate::allows('edit_testimony')) {
             return abort(401);
         }
         $image = $testimonial->getFirstMedia('testimony')->getUrl('thumb');
+
         return view('admin.testimonies.edit', compact('testimonial', 'image'));
     }
 
@@ -151,7 +157,7 @@ class TestimonialController extends Controller
      */
     public function update(Request $request, Testimonial $testimonial)
     {
-        if(!Gate::allows('edit_testimony')){
+        if (! Gate::allows('edit_testimony')) {
             return abort(401);
         }
         $testimonial->name = $request->name;
@@ -165,8 +171,8 @@ class TestimonialController extends Controller
         }
         $testimonial->save();
         flash('Updated Successfully');
-        return redirect()->action('Admin\TestimonialController@index');
 
+        return redirect()->action('Admin\TestimonialController@index');
     }
 
     /**
@@ -178,11 +184,12 @@ class TestimonialController extends Controller
      */
     public function destroy(Testimonial $testimonial)
     {
-        if(!Gate::allows('destroy_testimony')){
+        if (! Gate::allows('destroy_testimony')) {
             return abort(401);
         }
         $testimonial->delete();
         flash('Deleted Successfully')->important();
+
         return back();
     }
 }

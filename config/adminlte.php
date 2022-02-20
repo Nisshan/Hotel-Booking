@@ -229,50 +229,50 @@ return [
         ['header' => 'General'],
         [
             'text' => 'Rooms',
-            'url' =>'admin/rooms',
-            'icon' => 'fas fa-hotel'
+            'url' => 'admin/rooms',
+            'icon' => 'fas fa-hotel',
         ],
         [
             'text' => 'Places',
             'url' => 'admin/places',
-            'icon' => 'fa fa-location-arrow'
+            'icon' => 'fa fa-location-arrow',
         ],
         [
             'text' => 'Testimony',
             'url' => 'admin/testimonials',
-            'icon' => 'fa fa-eye'
+            'icon' => 'fa fa-eye',
         ],
         [
             'text' => 'Services',
             'url' => 'admin/services',
-            'icon' => ''
+            'icon' => '',
         ],
         [
             'text' => 'Booking',
             'url' => 'admin/booking',
-            'icon' => 'bookmark-outline'
+            'icon' => 'bookmark-outline',
         ],
         ['header' => 'Roles And Permissions'],
         [
             'text' => 'Users',
-            'url'  => 'admin/users',
+            'url' => 'admin/users',
             'icon' => 'fas fa-fw fa-user',
-            'can' => 'create_user'
+            'can' => 'create_user',
         ],
         [
             'text' => 'Roles',
-            'url'  => 'admin/roles',
+            'url' => 'admin/roles',
             'icon' => 'fas fa-fw fa-lock',
         ],
         [
             'header' => 'Settings',
-            'icon' => 'fa fa-cog'
+            'icon' => 'fa fa-cog',
         ],
         [
             'text' => 'Settings',
-            'url'  => 'settings',
+            'url' => 'settings',
             'icon' => 'fa fa-cog',
-            'can' => 'create_user'
+            'can' => 'create_user',
         ],
     ],
 

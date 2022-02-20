@@ -1,11 +1,10 @@
 <?php
-namespace Database\Factories;
 
+namespace Database\Factories;
 
 use App\Testimonial;
 use App\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
-
 
 class TestimonialFactory extends Factory
 {
@@ -17,9 +16,7 @@ class TestimonialFactory extends Factory
             'name' => $this->faker->name,
             'description' => $this->faker->sentence,
             'status' => 1,
-            'user_id' => User::all()->random()->id
+            'user_id' => User::all()->random()->id,
         ];
     }
-
-
 }

@@ -30,7 +30,7 @@ class UserTableSeeder extends Seeder
                 'email_verified_at' => Carbon::now(),
                 'type' => 1,
                 'password' => bcrypt('h0tel@dmin'),
-            ]
+            ],
         ]);
         User::factory()->count(10)->create();
     }

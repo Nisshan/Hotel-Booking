@@ -6,7 +6,6 @@ use App\Place;
 use App\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
-
 class PlaceFactory extends Factory
 {
     protected $model = Place::class;
@@ -15,10 +14,10 @@ class PlaceFactory extends Factory
     {
         return [
             'name' => $this->faker->city,
-            'description' =>$this->faker->sentence,
+            'description' => $this->faker->sentence,
             'travel_description' => $this->faker->sentence,
             'user_id' => User::all()->random()->id,
-            'slug' => $this->faker->slug
+            'slug' => $this->faker->slug,
         ];
     }
 }

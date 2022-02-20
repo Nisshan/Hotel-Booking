@@ -1,11 +1,9 @@
 <?php
 
-
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Room;
-use App\Service;
 use Exception;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Http\RedirectResponse;
@@ -42,6 +40,7 @@ class RoomController extends Controller
         if (auth()->user()->can('delete_room')) {
             $has_delete = true;
         }
+
         return DataTables::of(Room::query())
             ->addColumn('actions', function ($room) use ($has_view, $has_edit, $has_delete) {
                 $view = "";
@@ -61,10 +60,12 @@ class RoomController extends Controller
                         ->with(['route' => route('rooms.destroy', ['room' => $room->id])])->render();
                     $view .= $delete;
                 }
+
                 return $view;
             })->rawColumns(['actions'])
             ->make('true');
     }
+
     /**
      * Display a listing of the resource.
      *
@@ -72,9 +73,10 @@ class RoomController extends Controller
      */
     public function index()
     {
-        if(!Gate::allows('view_room')){
+        if (! Gate::allows('view_room')) {
             return abort(401);
         }
+
         return view('admin.rooms.index');
     }
 
@@ -85,9 +87,10 @@ class RoomController extends Controller
      */
     public function create()
     {
-        if(!Gate::allows('create_room')){
+        if (! Gate::allows('create_room')) {
             return abort(401);
         }
+
         return view('admin.rooms.create');
     }
 
@@ -102,14 +105,14 @@ class RoomController extends Controller
      */
     public function store(Request $request)
     {
-        if(!Gate::allows('create_room')){
+        if (! Gate::allows('create_room')) {
             return abort(401);
         }
-        $room = new Room;
+        $room = new Room();
         $room->type = $request->type;
         $room->description = $request->description;
         $room->facilities = $request->facilities;
-        $room->user_id =auth()->id();
+        $room->user_id = auth()->id();
         $room->price = $request->price;
         $room->capacity = $request->capacity;
         $room->room_no = $request->room_no;
@@ -117,13 +120,14 @@ class RoomController extends Controller
         $room->addMediaFromRequest('cover')
             ->toMediaCollection('room-cover');
 
-        foreach ($request->file('images') as $image){
+        foreach ($request->file('images') as $image) {
             $room->addMedia($image)
                 ->toMediaCollection('rooms');
         }
 
         $room->save();
         flash('Created Successfully')->success();
+
         return redirect()->action('Admin\RoomController@index');
     }
 
@@ -135,11 +139,12 @@ class RoomController extends Controller
      */
     public function show(Room $room)
     {
-        if(!Gate::allows('view_room')){
+        if (! Gate::allows('view_room')) {
             return abort(401);
         }
         $images = $room->getMedia('rooms');
-        return view('admin.rooms.view',compact('room','images'));
+
+        return view('admin.rooms.view', compact('room', 'images'));
     }
 
     /**
@@ -150,11 +155,11 @@ class RoomController extends Controller
      */
     public function edit(Room $room)
     {
-        if(!Gate::allows('edit_room')){
+        if (! Gate::allows('edit_room')) {
             return abort(401);
         }
-        return view('admin.rooms.edit',compact('room'));
 
+        return view('admin.rooms.edit', compact('room'));
     }
 
     /**
@@ -169,7 +174,7 @@ class RoomController extends Controller
      */
     public function update(Request $request, Room $room)
     {
-        if(!Gate::allows('edit_room')){
+        if (! Gate::allows('edit_room')) {
             return abort(401);
         }
 
@@ -180,20 +185,21 @@ class RoomController extends Controller
         $room->price = $request->price;
         $room->capacity = $request->capacity;
         $room->room_no = $request->room_no;
-        if($request->cover){
+        if ($request->cover) {
             $room->getFirstMedia('room-cover')->delete();
             $room->addMediaFromRequest('cover')
                 ->toMediaCollection('room-cover');
         }
-        if($request->images){
-             $room->clearMediaCollection('rooms');
-            foreach ($request->file('images') as $image){
+        if ($request->images) {
+            $room->clearMediaCollection('rooms');
+            foreach ($request->file('images') as $image) {
                 $room->addMedia($image)
                     ->toMediaCollection('rooms');
             }
         }
         $room->save();
         flash('Updated Successfully')->success();
+
         return redirect()->action('Admin\RoomController@index');
     }
 
@@ -206,12 +212,14 @@ class RoomController extends Controller
      */
     public function destroy(Room $room)
     {
-        if(!Gate::allows('delete_room')){
+        if (! Gate::allows('delete_room')) {
             flash('Not Authorized To delete room')->error();
+
             return back();
         }
         $room->delete();
         flash('deleted Successfully');
+
         return back();
     }
 }

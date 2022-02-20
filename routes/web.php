@@ -31,56 +31,54 @@ use Illuminate\Support\Facades\Route;
 //    return view('welcome');
 //});
 
-Route::redirect('/admin','login');
+Route::redirect('/admin', 'login');
 
 
 Route::get('/', [HomeController::class,'index'])->name('home');
-Route::get('/available',[SearchController::class,'search'])->name('available.rooms');
-Route::post('/available',[SearchController::class,'search'])->name('rooms.available');
-Route::get('/rooms',[SiteController::class,'rooms'])->name('rooms');
-Route::get('/services',[SiteController::class,'services'])->name('services');
-Route::get('/places',[SiteController::class,'places'])->name('places');
-Route::get('/rooms/{room_no}',[SiteController::class,'singleRoom'])->name('single.room');
-Route::get('/places/{name}',[SiteController::class,'visitPlace'])->name('single.place');
-Route::get('/service/{name}',[SiteController::class,'servicePage'])->name('single.service');
+Route::get('/available', [SearchController::class,'search'])->name('available.rooms');
+Route::post('/available', [SearchController::class,'search'])->name('rooms.available');
+Route::get('/rooms', [SiteController::class,'rooms'])->name('rooms');
+Route::get('/services', [SiteController::class,'services'])->name('services');
+Route::get('/places', [SiteController::class,'places'])->name('places');
+Route::get('/rooms/{room_no}', [SiteController::class,'singleRoom'])->name('single.room');
+Route::get('/places/{name}', [SiteController::class,'visitPlace'])->name('single.place');
+Route::get('/service/{name}', [SiteController::class,'servicePage'])->name('single.service');
 
 
-Route::resource('bookingroom',BookingController::class);
+Route::resource('bookingroom', BookingController::class);
 
-Route::group(['prefix'=>'admin/'],function (){
+Route::group(['prefix' => 'admin/'], function () {
     Auth::routes();
-Route::group(['middleware' => 'auth'], function () {
+    Route::group(['middleware' => 'auth'], function () {
+        Route::get('/dashboard', [DashboardController::class,'index'])->name('dashboard');
 
-    Route::get('/dashboard',[DashboardController::class,'index'])->name('dashboard');
+        Route::resource('users', UserController::class);
+        Route::get('getUsers', [UserController::class,'getUsers']);
 
-    Route::resource('users', UserController::class);
-    Route::get('getUsers', [UserController::class,'getUsers']);
-
-    Route::resource('roles', RolesController::class);
-    Route::get('getRoles', [RolesController::class,'getRoles']);
+        Route::resource('roles', RolesController::class);
+        Route::get('getRoles', [RolesController::class,'getRoles']);
 
 
-    Route::resource('galleries', ImageGalleryController::class);
+        Route::resource('galleries', ImageGalleryController::class);
 
-    Route::resource('rooms', RoomController::class);
-    Route::get('getRooms', [RoomController::class,'getRooms']);
+        Route::resource('rooms', RoomController::class);
+        Route::get('getRooms', [RoomController::class,'getRooms']);
 
-    Route::resource('testimonials', TestimonialController::class);
-    Route::get('getTestimonies', [TestimonialController::class,'getTestimonies']);
+        Route::resource('testimonials', TestimonialController::class);
+        Route::get('getTestimonies', [TestimonialController::class,'getTestimonies']);
 
-    Route::resource('places', PlacesController::class);
-    Route::get('getPlaces', [PlacesController::class,'getPlaces']);
+        Route::resource('places', PlacesController::class);
+        Route::get('getPlaces', [PlacesController::class,'getPlaces']);
 
-    Route::resource('services', ServicesController::class);
-    Route::get('getServices', [ServicesController::class,'getServices']);
+        Route::resource('services', ServicesController::class);
+        Route::get('getServices', [ServicesController::class,'getServices']);
 
-    Route::resource('booking',RoomBookingController::class);
-    Route::get('getBookedRoom',[RoomBookingController::class,'getBookedRoom']);
+        Route::resource('booking', RoomBookingController::class);
+        Route::get('getBookedRoom', [RoomBookingController::class,'getBookedRoom']);
 
-    Route::get('/images/latest', [ImageGalleryController::class,'getLatestImage'])->name('latest.image');
-    Route::get('/images/search/{searchTerm}', [ImageGalleryController::class,'searchImage'])->name('images.search');
-
-});
+        Route::get('/images/latest', [ImageGalleryController::class,'getLatestImage'])->name('latest.image');
+        Route::get('/images/search/{searchTerm}', [ImageGalleryController::class,'searchImage'])->name('images.search');
+    });
 });
 
 Auth::routes();

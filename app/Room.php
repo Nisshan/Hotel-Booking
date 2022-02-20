@@ -2,14 +2,12 @@
 
 namespace App;
 
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Spatie\MediaLibrary\InteractsWithMedia;
 use Spatie\MediaLibrary\HasMedia;
+use Spatie\MediaLibrary\InteractsWithMedia;
 use Spatie\MediaLibrary\MediaCollections\Models\Media;
-
-
 
 /**
  * Class Room
@@ -20,8 +18,7 @@ class Room extends Model implements HasMedia
     use HasFactory;
     use InteractsWithMedia;
 
-
-    public function registerMediaConversions(Media $media = null) : void
+    public function registerMediaConversions(Media $media = null): void
     {
         $this->addMediaConversion('thumb')
             ->width(200)
@@ -33,6 +30,6 @@ class Room extends Model implements HasMedia
      */
     public function booking()
     {
-        return $this->hasMany(BookRoom::class,'room_id')->where('status',1);
+        return $this->hasMany(BookRoom::class, 'room_id')->where('status', 1);
     }
 }

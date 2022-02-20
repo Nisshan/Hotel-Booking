@@ -20,7 +20,7 @@ return [
                     'class' => 'form-control', // override global input_class
                     'style' => '', // any inline styles
                     'value' => 'QCode', // any default value
-                    'group' => 'site'
+                    'group' => 'site',
                 ],
                 [
                     'name' => 'logo',
@@ -69,7 +69,7 @@ return [
                     'preview_class' => 'rooms Image',
                     'preview_style' => 'height:40px',
                     'class' => 'form-control',
-                    'group' => 'site'
+                    'group' => 'site',
                 ],
                 [
                     'name' => 'service-cover',
@@ -81,7 +81,7 @@ return [
                     'preview_class' => 'service-cover',
                     'preview_style' => 'height:40px',
                     'class' => 'form-control',
-                    'group' => 'site'
+                    'group' => 'site',
                 ],
                 [
                     'name' => 'place-image',
@@ -138,8 +138,8 @@ return [
                     'label' => 'Map Location',
                     'hint' => 'this is your location in google. Copy your map embed code and paste here',
                     'value' => 'map is not attached now',
-                ]
-            ]
+                ],
+            ],
         ],
         'Social' => [
             'title' => 'Social Information',
@@ -169,7 +169,7 @@ return [
                     'placeholder' => 'Instagram Link',
                     'class' => 'form-control',
                 ],
-            ]
+            ],
         ],
         'information' => [
             'title' => 'Information Setting',
@@ -214,7 +214,7 @@ return [
                     'class' => 'form-control',
                 ],
 
-            ]
+            ],
         ],
         'mail_setup' => [
             'title' => 'Mail Server Setup',
@@ -228,21 +228,21 @@ return [
                     'placeholder' => 'ex: hotel@gmail.com',
                     'class' => 'form-control',
                     'type' => 'email',
-                    'label' => 'Username'
+                    'label' => 'Username',
                 ],
                 [
                     'name' => 'password',
                     'type' => 'text',
                     'label' => 'Password',
                     'class' => 'form-control',
-                    'placeholder' => 'your email password here'
+                    'placeholder' => 'your email password here',
                 ],
                 [
                     'name' => 'port',
                     'type' => 'number',
                     'label' => 'Port',
                     'placeholder' => 'Port number',
-                    'class' => 'form-control'
+                    'class' => 'form-control',
                 ],
                 [
                     'name' => 'security',
@@ -251,8 +251,8 @@ return [
                     'value' => 'tls',
                     'options' => ['tls', 'ssl'],
 
-                ]
-            ]
+                ],
+            ],
         ],
         'homepage_setup' => [
             'title' => 'hide and show page layouts',
@@ -266,75 +266,75 @@ return [
                     'label' => 'About',
                     'type' => 'boolean',
                     'value' => true,
-                    'class' => 'w-auto'
+                    'class' => 'w-auto',
                 ],
                 [
                     'name' => 'rooms',
                     'label' => 'Room Accommodation',
                     'type' => 'boolean',
                     'value' => true,
-                    'class' => 'w-auto'
+                    'class' => 'w-auto',
                 ],
                 [
                     'name' => 'service',
                     'label' => 'Services',
                     'type' => 'boolean',
                     'value' => true,
-                    'class' => 'w-auto'
+                    'class' => 'w-auto',
                 ],
                 [
                     'name' => 'places',
                     'label' => 'Near By place to Visit',
                     'type' => 'boolean',
                     'value' => true,
-                    'class' => 'w-auto'
+                    'class' => 'w-auto',
                 ],
                 [
                     'name' => 'testimonial',
                     'label' => 'Testimonial',
                     'type' => 'boolean',
                     'value' => true,
-                    'class' => 'w-auto'
+                    'class' => 'w-auto',
                 ],
                 [
                     'name' => 'map',
                     'label' => 'Map',
                     'type' => 'boolean',
                     'value' => true,
-                    'class' => 'w-auto'
+                    'class' => 'w-auto',
                 ],
                 [
                     'name' => 'footer',
                     'label' => 'Footer',
                     'type' => 'boolean',
                     'value' => true,
-                    'class' => 'w-auto'
+                    'class' => 'w-auto',
                 ],
                 [
                     'name' => 'show-room-desc',
                     'label' => 'Room Description',
                     'type' => 'boolean',
                     'value' => true,
-                    'class' => 'w-auto'
+                    'class' => 'w-auto',
                 ],
                 [
                     'name' => 'show-service-desc',
                     'label' => 'Service Description',
                     'type' => 'boolean',
                     'value' => true,
-                    'class' => 'w-auto'
+                    'class' => 'w-auto',
                 ],
                 [
                     'name' => 'show-place-desc',
                     'label' => 'Place Description',
                     'type' => 'boolean',
                     'value' => true,
-                    'class' => 'w-auto'
+                    'class' => 'w-auto',
                 ],
 
 
-            ]
-        ]
+            ],
+        ],
     ],
     // Setting page url, will be used for get and post request
     'url' => '/settings',
@@ -373,5 +373,5 @@ return [
     'setting_group' => function () {
         // return 'user_'.auth()->id();
         return 'group';
-    }
+    },
 ];

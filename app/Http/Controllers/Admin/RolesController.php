@@ -6,12 +6,12 @@ use App\Http\Controllers\Controller;
 use Exception;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\View\View;
 use Silber\Bouncer\Database\Ability;
 use Silber\Bouncer\Database\Role;
-use Illuminate\Http\Request;
 use Yajra\DataTables\DataTables;
 
 /**
@@ -38,6 +38,7 @@ class RolesController extends Controller
         if (auth()->user()->can('view_role')) {
             $has_delete = true;
         }
+
         return DataTables::of(Role::query())
             ->addColumn('actions', function ($role) use ($has_view, $has_edit, $has_delete) {
                 $view = "";
@@ -57,19 +58,21 @@ class RolesController extends Controller
                         ->with(['route' => route('roles.destroy', ['role' => $role->id])])->render();
                     $view .= $delete;
                 }
+
                 return $view;
             })
-            ->editColumn('permissions',function ($roles){
+            ->editColumn('permissions', function ($roles) {
                 $abilities = "";
-                foreach ($roles->abilities->pluck('title')  as $permission){
+                foreach ($roles->abilities->pluck('title')  as $permission) {
                     $abilities .= '<span class="badge badge-warning badge-many">' . $permission. '</span>&nbsp';
                 }
+
                 return $abilities;
             })
             ->rawColumns(['actions','permissions'])
             ->make('true');
-
     }
+
     /**
      * Display a listing of the resource.
      *
@@ -77,9 +80,10 @@ class RolesController extends Controller
      */
     public function index()
     {
-        if(!Gate::allows('view_role')){
+        if (! Gate::allows('view_role')) {
             return abort(401);
         }
+
         return view('admin.roles.index');
     }
 
@@ -90,11 +94,12 @@ class RolesController extends Controller
      */
     public function create()
     {
-        if(!Gate::allows('create_role')){
+        if (! Gate::allows('create_role')) {
             return abort(401);
         }
         $attributes = Ability::all()->groupBy('entity_type');
-        return view('admin.roles.create',compact('attributes'));
+
+        return view('admin.roles.create', compact('attributes'));
     }
 
     /**
@@ -105,16 +110,17 @@ class RolesController extends Controller
      */
     public function store(Request $request)
     {
-        if(!Gate::allows('create_role')){
+        if (! Gate::allows('create_role')) {
             return abort(401);
         }
         $request->validate(['name' => 'required|unique:roles|min:5']);
-        $role = new Role;
+        $role = new Role();
         $role->name = $request->name;
         $role->title = $request->title ? $request->title : $request->name;
         $role->save();
         $role->allow($request->input('permissions'));
         flash('Role Created ')->success();
+
         return redirect()->action('Admin\RolesController@index');
     }
 
@@ -126,11 +132,12 @@ class RolesController extends Controller
      */
     public function show(Role $role)
     {
-        if(!Gate::allows('view_role')){
+        if (! Gate::allows('view_role')) {
             return abort(401);
         }
         $permissions = $role->abilities->pluck('title')->toArray();
-        return view('admin.roles.view',compact('role','permissions'));
+
+        return view('admin.roles.view', compact('role', 'permissions'));
     }
 
     /**
@@ -141,12 +148,13 @@ class RolesController extends Controller
      */
     public function edit(Role $role)
     {
-        if(!Gate::allows('edit_role')){
+        if (! Gate::allows('edit_role')) {
             return abort(401);
         }
         $permissions = $role->abilities->pluck('title')->toArray();
         $attributes = Ability::all()->groupBy('sort-name');
-        return view('admin.roles.edit',compact('role','attributes','permissions'));
+
+        return view('admin.roles.edit', compact('role', 'attributes', 'permissions'));
     }
 
     /**
@@ -158,7 +166,7 @@ class RolesController extends Controller
      */
     public function update(Role $role, Request $request)
     {
-        if(!Gate::allows('edit_role')){
+        if (! Gate::allows('edit_role')) {
             return abort(401);
         }
 
@@ -167,11 +175,12 @@ class RolesController extends Controller
         $role->name = $request->name;
         $role->title = $request->title ? $request->title : $request->name;
         $role->save();
-        foreach ($role->getAbilities() as $ability){
-        $role->disallow($ability);
+        foreach ($role->getAbilities() as $ability) {
+            $role->disallow($ability);
         }
         $role->allow($request->input('permissions'));
         flash('Role Updated Successfully');
+
         return redirect()->action('Admin\RolesController@index');
     }
 
@@ -184,12 +193,14 @@ class RolesController extends Controller
      */
     public function destroy(Role $role)
     {
-        if(!Gate::allows('delete_role')){
+        if (! Gate::allows('delete_role')) {
             flash('You are Not authorized to perform this action')->error();
+
             return back();
         }
         $role->delete();
         flash('Role Deleted Successfully')->important();
+
         return back();
     }
 }

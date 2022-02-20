@@ -1,10 +1,10 @@
 <?php
 
 return [
-    'types' =>[
+    'types' => [
         'Single Room',
         'Double Room',
         'Triple Room',
         'Common Room',
-    ]
+    ],
 ];

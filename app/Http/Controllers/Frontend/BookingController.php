@@ -22,7 +22,6 @@ class BookingController extends Controller
      */
     public function index()
     {
-
     }
 
     /**
@@ -33,7 +32,8 @@ class BookingController extends Controller
     public function create()
     {
         $rooms = Room::all();
-        return view('frontend.create',compact('rooms'));
+
+        return view('frontend.create', compact('rooms'));
     }
 
     /**
@@ -46,9 +46,9 @@ class BookingController extends Controller
     {
         $date_to = Carbon::parse($request->date_to)->toDateTime();
         $date_form = Carbon::parse($request->date_from)->toDateTime();
-        $book = new BookRoom;
+        $book = new BookRoom();
         $book->to = $date_to;
-        $book->from =$date_form;
+        $book->from = $date_form;
         $book->name = $request->name;
         $book->email = $request->email;
         $book->number = $request->number;
@@ -58,19 +58,22 @@ class BookingController extends Controller
         flash('Thank You We will reply you shortly')->success();
         $data = Room::findorFail($request->room_id);
 
-        Mail::send('mail.receive-mail',
-            array(
+        Mail::send(
+            'mail.receive-mail',
+            [
                 'name' => $request->name,
                 'number' => $request->number,
                 'email' => $request->email,
                 'from' => $request->date_from,
                 'to' => $request->date_to,
-                'room_no' => $data->room_no
-             ), function ($message) {
-                $message->to('timsinanishan1@gmail.com');
-            });
-        return back();
+                'room_no' => $data->room_no,
+             ],
+            function ($message) {
+                 $message->to('timsinanishan1@gmail.com');
+             }
+        );
 
+        return back();
     }
 
     /**

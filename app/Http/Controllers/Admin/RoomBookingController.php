@@ -14,7 +14,6 @@ use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\View\View;
 use Yajra\DataTables\DataTables;
-use function foo\func;
 
 /**
  * Class RoomBookingController
@@ -55,6 +54,7 @@ class RoomBookingController extends Controller
                         ->with(['route' => route('booking.destroy', ['booking' => $bookroom->id])])->render();
                     $view .= $delete;
                 }
+
                 return $view;
             })->editColumn('from', function ($bookroom) {
                 return Carbon::parse($bookroom->from)->format('d M Y');
@@ -83,14 +83,12 @@ class RoomBookingController extends Controller
      *
      * @return Factory|View
      */
-
     public function create()
     {
         $rooms = Room::with('booking')->get();
 //        dd($rooms);
         return view('admin.bookings.create', compact('rooms'));
     }
-
 
     /**
      * Store a newly created resource in storage.
@@ -102,7 +100,7 @@ class RoomBookingController extends Controller
     {
         $date_to = Carbon::parse($request->date_to)->toDateTime();
         $date_form = Carbon::parse($request->date_from)->toDateTime();
-        $book = new BookRoom;
+        $book = new BookRoom();
         $book->to = $date_to;
         $book->from = $date_form;
         $book->name = 'Sunkoshi';
@@ -112,6 +110,7 @@ class RoomBookingController extends Controller
         $book->room_id = $request->room_id;
         $book->status = 1;
         $book->save();
+
         return back();
     }
 
@@ -135,6 +134,7 @@ class RoomBookingController extends Controller
     public function edit($id)
     {
         $booking = BookRoom::with('room')->findorfail($id);
+
         return view('admin.bookings.edit', compact('booking'));
     }
 
@@ -155,17 +155,21 @@ class RoomBookingController extends Controller
         $booking->status = $request->status;
         $booking->save();
         flash('Information Updated Successfully, Email Sent')->success();
-        Mail::send('mail.send-mail',
-            array(
+        Mail::send(
+            'mail.send-mail',
+            [
                 'name' => $request->name,
                 'from' => $date_from,
                 'to' => $date_to,
 
                 'status' => $request->status,
-                'room_no' => $request->room_no
-            ), function ($message) {
+                'room_no' => $request->room_no,
+            ],
+            function ($message) {
                 $message->to('timsinanishan1@gmail.com');
-            });
+            }
+        );
+
         return redirect()->action('Admin\RoomBookingController@create');
     }
 
@@ -180,6 +184,7 @@ class RoomBookingController extends Controller
         $booking = BookRoom::find($id);
         $booking->delete();
         flash('Deleted sucessfully');
+
         return back();
     }
 }

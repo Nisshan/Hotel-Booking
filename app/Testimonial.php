@@ -2,12 +2,11 @@
 
 namespace App;
 
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Spatie\MediaLibrary\InteractsWithMedia;
+use Illuminate\Database\Eloquent\Model;
 use Spatie\MediaLibrary\HasMedia;
+use Spatie\MediaLibrary\InteractsWithMedia;
 use Spatie\MediaLibrary\MediaCollections\Models\Media;
-
 
 /**
  * Class Testimonial
@@ -20,7 +19,7 @@ class Testimonial extends Model implements HasMedia
 
     protected $guarded = [];
 
-    public function registerMediaConversions(Media $media = null):void
+    public function registerMediaConversions(Media $media = null): void
     {
         $this->addMediaConversion('thumb')
             ->height(200)
