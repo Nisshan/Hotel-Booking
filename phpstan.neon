@@ -10,9 +10,14 @@ parameters:
     level: 5
 
     ignoreErrors:
-        - '#PHPDoc tag @var#'
+        -
+        	message: '#Access to an undefined property [a-zA-Z0-9\\_]+::\$[a-zA-Z0-9\\_]#'
+        	path: app/Http/Controllers/Admin/RolesController.php
+        -   '#PHPDoc tag @var#'
 
     excludePaths:
         - ./*/*/FileToBeExcluded.php
 
     checkMissingIterableValueType: false
+
+    reportUnmatchedIgnoredErrors: false

@@ -4,10 +4,8 @@ namespace App\Http\Controllers\Admin;
 
 use App\BookRoom;
 use App\Http\Controllers\Controller;
-use App\Place;
 use App\Room;
 use Carbon\Carbon;
-use Illuminate\Contracts\View\Factory;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
@@ -21,25 +19,24 @@ use Yajra\DataTables\DataTables;
  */
 class RoomBookingController extends Controller
 {
-    public function getBookedRoom()
+
+    public function getBookedRoom() : Response
     {
-        $has_view = true;
-        $has_edit = true;
-        $has_delete = true;
-//        if (auth()->user()->can('view_place')) {
-//            $has_view = true;
-//        }
-//        if (auth()->user()->can('edit_place')) {
-//            $has_edit = true;
-//        }
-//        if (auth()->user()->can('delete_place')) {
-//            $has_delete = true;
-//        }
+        $has_view = false;
+        $has_edit = false;
+        $has_delete = false;
+        if (auth()->user()->can('view_place')) {
+            $has_view = true;
+        }
+        if (auth()->user()->can('edit_place')) {
+            $has_edit = true;
+        }
+        if (auth()->user()->can('delete_place')) {
+            $has_delete = true;
+        }
         return DataTables::of(BookRoom::with('room')->get())
             ->addColumn('actions', function ($bookroom) use ($has_view, $has_edit, $has_delete) {
                 $view = "";
-                $edit = "";
-                $delete = "";
                 if ($has_view) {
                     $view = view('admin.datatables.action-view')
                         ->with(['route' => route('booking.show', ['booking' => $bookroom->id])])->render();
@@ -71,9 +68,9 @@ class RoomBookingController extends Controller
     /**
      * Display a listing of the resource.
      *
-     * @return Factory|View
+     * @return View
      */
-    public function index()
+    public function index(): View
     {
         return view('admin.bookings.index');
     }
@@ -81,22 +78,22 @@ class RoomBookingController extends Controller
     /**
      * Show the form for creating a new resource.
      *
-     * @return Factory|View
+     * @return View
      */
-    public function create()
+    public function create(): View
     {
-        $rooms = Room::with('booking')->get();
-//        dd($rooms);
-        return view('admin.bookings.create', compact('rooms'));
+        return view('admin.bookings.create', [
+            'rooms' => Room::with('booking')->get()
+        ]);
     }
 
     /**
      * Store a newly created resource in storage.
      *
      * @param Request $request
-     * @return Response
+     * @return RedirectResponse
      */
-    public function store(Request $request)
+    public function store(Request $request): RedirectResponse
     {
         $date_to = Carbon::parse($request->date_to)->toDateTime();
         $date_form = Carbon::parse($request->date_from)->toDateTime();
@@ -114,28 +111,19 @@ class RoomBookingController extends Controller
         return back();
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param int $id
-     * @return Response
-     */
-    public function show($id)
-    {
-        //
-    }
+
 
     /**
      * Show the form for editing the specified resource.
      *
      * @param int $id
-     * @return Factory|View
+     * @return View
      */
-    public function edit($id)
+    public function edit(int $id): View
     {
-        $booking = BookRoom::with('room')->findorfail($id);
-
-        return view('admin.bookings.edit', compact('booking'));
+        return view('admin.bookings.edit', [
+            'booking' =>  BookRoom::with('room')->findOrFail($id)
+        ]);
     }
 
     /**
@@ -145,16 +133,17 @@ class RoomBookingController extends Controller
      * @param int $id
      * @return RedirectResponse
      */
-    public function update(Request $request, $id)
+    public function update(Request $request, int $id): RedirectResponse
     {
-//        $date_to = Carbon::parse($request->date_to)->toDateTime();
         $booking = BookRoom::find($id);
         $date_to = $booking->to;
         $date_from = $booking->from;
 
         $booking->status = $request->status;
         $booking->save();
+
         flash('Information Updated Successfully, Email Sent')->success();
+
         Mail::send(
             'mail.send-mail',
             [
@@ -177,13 +166,13 @@ class RoomBookingController extends Controller
      * Remove the specified resource from storage.
      *
      * @param int $id
-     * @return Response
+     * @return RedirectResponse
      */
-    public function destroy($id)
+    public function destroy(int $id): RedirectResponse
     {
         $booking = BookRoom::find($id);
         $booking->delete();
-        flash('Deleted sucessfully');
+        flash('Deleted successfully');
 
         return back();
     }

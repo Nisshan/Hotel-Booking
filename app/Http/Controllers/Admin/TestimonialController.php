@@ -4,14 +4,16 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Testimonial;
+use Exception;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\View\View;
-use Spatie\MediaLibrary\Exceptions\FileCannotBeAdded\DiskDoesNotExist;
-use Spatie\MediaLibrary\Exceptions\FileCannotBeAdded\FileDoesNotExist;
-use Spatie\MediaLibrary\Exceptions\FileCannotBeAdded\FileIsTooBig;
+use Spatie\MediaLibrary\MediaCollections\Exceptions\DiskDoesNotExist;
+use Spatie\MediaLibrary\MediaCollections\Exceptions\FileDoesNotExist;
+use Spatie\MediaLibrary\MediaCollections\Exceptions\FileIsTooBig;
 use Yajra\DataTables\DataTables;
 
 /**
@@ -20,7 +22,7 @@ use Yajra\DataTables\DataTables;
  */
 class TestimonialController extends Controller
 {
-    public function getTestimonies()
+    public function getTestimonies(): Response
     {
         $has_view = false;
         $has_edit = false;
@@ -38,8 +40,6 @@ class TestimonialController extends Controller
         return DataTables::of(Testimonial::query())
             ->addColumn('actions', function ($testimony) use ($has_view, $has_edit, $has_delete) {
                 $view = "";
-                $edit = "";
-                $delete = "";
                 if ($has_view) {
                     $view = view('admin.datatables.action-view')
                         ->with(['route' => route('testimonials.show', [$testimony->id])])->render();
@@ -63,9 +63,9 @@ class TestimonialController extends Controller
     /**
      * Display a listing of the resource.
      *
-     * @return Factory|View
+     * @return View
      */
-    public function index()
+    public function index(): View
     {
         if (! Gate::allows('create_testimony')) {
             return abort(401);
@@ -77,9 +77,9 @@ class TestimonialController extends Controller
     /**
      * Show the form for creating a new resource.
      *
-     * @return Factory|View
+     * @return View
      */
-    public function create()
+    public function create(): View
     {
         if (! Gate::allows('create_testimony')) {
             return abort(401);
@@ -93,11 +93,10 @@ class TestimonialController extends Controller
      *
      * @param Request $request
      * @return RedirectResponse
-     * @throws DiskDoesNotExist
      * @throws FileDoesNotExist
      * @throws FileIsTooBig
      */
-    public function store(Request $request)
+    public function store(Request $request): RedirectResponse
     {
         if (! Gate::allows('create_testimony')) {
             return abort(401);
@@ -117,32 +116,36 @@ class TestimonialController extends Controller
      * Display the specified resource.
      *
      * @param Testimonial $testimonial
-     * @return Factory|View
+     * @return View
      */
-    public function show(Testimonial $testimonial)
+    public function show(Testimonial $testimonial): View
     {
         if (! Gate::allows('view_testimony')) {
             return abort(401);
         }
-        $image = $testimonial->getFirstMedia('testimony')->getUrl('thumb');
 
-        return view('admin.testimonies.view', compact('testimonial', 'image'));
+        return view('admin.testimonies.view',[
+            'testimonial' => $testimonial,
+            'image' => $testimonial->getFirstMedia('testimony')->getUrl('thumb')
+        ]);
     }
 
     /**
      * Show the form for editing the specified resource.
      *
      * @param Testimonial $testimonial
-     * @return Factory|View
+     * @return View
      */
-    public function edit(Testimonial $testimonial)
+    public function edit(Testimonial $testimonial): View
     {
         if (! Gate::allows('edit_testimony')) {
             return abort(401);
         }
-        $image = $testimonial->getFirstMedia('testimony')->getUrl('thumb');
 
-        return view('admin.testimonies.edit', compact('testimonial', 'image'));
+        return view('admin.testimonies.edit',[
+            'testimonial' => $testimonial,
+            'image' => $testimonial->getFirstMedia('testimony')->getUrl('thumb')
+        ]);
     }
 
     /**
@@ -151,11 +154,10 @@ class TestimonialController extends Controller
      * @param Request $request
      * @param Testimonial $testimonial
      * @return RedirectResponse
-     * @throws DiskDoesNotExist
      * @throws FileDoesNotExist
      * @throws FileIsTooBig
      */
-    public function update(Request $request, Testimonial $testimonial)
+    public function update(Request $request, Testimonial $testimonial): RedirectResponse
     {
         if (! Gate::allows('edit_testimony')) {
             return abort(401);
@@ -180,9 +182,9 @@ class TestimonialController extends Controller
      *
      * @param Testimonial $testimonial
      * @return RedirectResponse
-     * @throws \Exception
+     * @throws Exception
      */
-    public function destroy(Testimonial $testimonial)
+    public function destroy(Testimonial $testimonial): RedirectResponse
     {
         if (! Gate::allows('destroy_testimony')) {
             return abort(401);

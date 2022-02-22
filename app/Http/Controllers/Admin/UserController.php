@@ -4,9 +4,11 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\User;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Gate;
+use Illuminate\View\View;
 use Silber\Bouncer\Database\Role;
 use Yajra\DataTables\DataTables;
 
@@ -16,11 +18,7 @@ use Yajra\DataTables\DataTables;
  */
 class UserController extends Controller
 {
-    /**
-     * @return mixed
-     * @throws \Exception
-     */
-    public function getUsers()
+    public function getUsers(): Response
     {
         $has_view = false;
         $has_edit = false;
@@ -38,8 +36,6 @@ class UserController extends Controller
         return DataTables::of(User::query())
             ->addColumn('actions', function ($user) use ($has_view, $has_edit, $has_delete) {
                 $view = "";
-                $edit = "";
-                $delete = "";
                 if ($has_view) {
                     $view = view('admin.datatables.action-view')
                         ->with(['route' => route('users.show', ['user' => $user->id])])->render();
@@ -63,9 +59,9 @@ class UserController extends Controller
     /**
      * Display a listing of the resource.
      *
-     * @return Response
+     * @return View
      */
-    public function index()
+    public function index(): View
     {
         if (! Gate::allows('create_user')) {
             return abort(401);
@@ -77,9 +73,9 @@ class UserController extends Controller
     /**
      * Show the form for creating a new resource.
      *
-     * @return Response
+     * @return View
      */
-    public function create()
+    public function create(): View
     {
         if (! Gate::allows('create_user')) {
             return abort(401);
@@ -92,9 +88,9 @@ class UserController extends Controller
      * Store a newly created resource in storage.
      *
      * @param Request $request
-     * @return Response
+     * @return RedirectResponse
      */
-    public function store(Request $request)
+    public function store(Request $request): RedirectResponse
     {
         if (! Gate::allows('create_user')) {
             return abort(401);
@@ -118,32 +114,36 @@ class UserController extends Controller
      * Display the specified resource.
      *
      * @param User $user
-     * @return Response
+     * @return View
      */
-    public function show(User $user)
+    public function show(User $user): View
     {
         if (! Gate::allows('view_user')) {
             return abort(401);
         }
-        $abilities = $user->getAbilities();
 
-        return view('admin.users.view', compact('user', 'abilities'));
+        return view('admin.users.view',[
+            'user' => $user,
+            'abilities' => $user->getAbilities()
+        ]);
     }
 
     /**
      * Show the form for editing the specified resource.
      *
      * @param User $user
-     * @return Response
+     * @return View
      */
-    public function edit(User $user)
+    public function edit(User $user): View
     {
         if (! Gate::allows('edit_user')) {
             return abort(401);
         }
-        $roles = Role::all();
 
-        return view('admin.users.edit', compact('user', 'roles'));
+        return view('admin.users.edit',[
+            'user' => $user,
+            'roles' => Role::all()
+        ]);
     }
 
     /**
@@ -151,9 +151,9 @@ class UserController extends Controller
      *
      * @param User $user
      * @param Request $request
-     * @return Response
+     * @return RedirectResponse
      */
-    public function update(User $user, Request $request)
+    public function update(User $user, Request $request): RedirectResponse
     {
         if (! Gate::allows('edit_user')) {
             return abort(401);
@@ -185,11 +185,10 @@ class UserController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param int $id
-     * @return Response
-     * @throws \Exception
+     * @param User $user
+     * @return RedirectResponse
      */
-    public function destroy(User $user)
+    public function destroy(User $user): RedirectResponse
     {
         if (! Gate::allows('delete_user')) {
             flash('Not Authorized To delete User')->error();
@@ -197,7 +196,7 @@ class UserController extends Controller
             return back();
         }
         $user->delete();
-        flash('User Deleted')->important('User Deleted');
+        flash('User Deleted')->important();
 
         return back();
     }

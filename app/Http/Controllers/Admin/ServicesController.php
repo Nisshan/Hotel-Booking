@@ -10,6 +10,8 @@ use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\View\View;
+use Spatie\MediaLibrary\MediaCollections\Exceptions\FileDoesNotExist;
+use Spatie\MediaLibrary\MediaCollections\Exceptions\FileIsTooBig;
 use Yajra\DataTables\DataTables;
 
 /**
@@ -18,11 +20,8 @@ use Yajra\DataTables\DataTables;
  */
 class ServicesController extends Controller
 {
-    /**
-     * @return mixed
-     * @throws \Exception
-     */
-    public function getServices()
+
+    public function getServices(): Response
     {
         $has_view = false;
         $has_edit = false;
@@ -40,8 +39,6 @@ class ServicesController extends Controller
         return DataTables::of(Service::query())
             ->addColumn('actions', function ($service) use ($has_view, $has_edit, $has_delete) {
                 $view = "";
-                $edit = "";
-                $delete = "";
                 if ($has_view) {
                     $view = view('admin.datatables.action-view')
                         ->with(['route' => route('services.show', ['service' => $service->id])])->render();
@@ -65,9 +62,9 @@ class ServicesController extends Controller
     /**
      * Display a listing of the resource.
      *
-     * @return Response
+     * @return View
      */
-    public function index()
+    public function index(): View
     {
         if (! Gate::allows('view_service')) {
             return abort(401);
@@ -79,9 +76,9 @@ class ServicesController extends Controller
     /**
      * Show the form for creating a new resource.
      *
-     * @return Response
+     * @return View
      */
-    public function create()
+    public function create(): View
     {
         if (! Gate::allows('create_service')) {
             return abort(401);
@@ -94,9 +91,11 @@ class ServicesController extends Controller
      * Store a newly created resource in storage.
      *
      * @param Request $request
-     * @return Response
+     * @return RedirectResponse
+     * @throws FileDoesNotExist
+     * @throws FileIsTooBig
      */
-    public function store(Request $request)
+    public function store(Request $request): RedirectResponse
     {
         if (! Gate::allows('create_service')) {
             return abort(401);
@@ -117,32 +116,36 @@ class ServicesController extends Controller
      * Display the specified resource.
      *
      * @param Service $service
-     * @return Factory|View
+     * @return View
      */
-    public function show(Service $service)
+    public function show(Service $service): View
     {
         if (! Gate::allows('view_service')) {
             return abort(401);
         }
-        $image = $service->getFirstMedia('service')->getUrl('thumb');
 
-        return view('admin.services.view', compact('service', 'image'));
+        return view('admin.services.view',[
+            'service' => $service,
+            'image' => $service->getFirstMedia('service')->getUrl('thumb')
+        ]);
     }
 
     /**
      * Show the form for editing the specified resource.
      *
      * @param Service $service
-     * @return Factory|View
+     * @return View
      */
-    public function edit(Service $service)
+    public function edit(Service $service): View
     {
         if (! Gate::allows('edit_service')) {
             return abort(401);
         }
-        $image = $service->getFirstMedia('service')->getUrl('thumb');
 
-        return view('admin.services.edit', compact('service', 'image'));
+        return view('admin.services.edit', [
+            'service' => $service,
+            'image' => $service->getFirstMedia('service')->getUrl('thumb')
+        ]);
     }
 
     /**
@@ -150,9 +153,11 @@ class ServicesController extends Controller
      *
      * @param Request $request
      * @param Service $service
-     * @return void
+     * @throws FileDoesNotExist
+     * @throws FileIsTooBig
+     * @return RedirectResponse
      */
-    public function update(Request $request, Service $service)
+    public function update(Request $request, Service $service): RedirectResponse
     {
         $service->name = $request->name;
         $service->description = $request->description;
@@ -171,20 +176,17 @@ class ServicesController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param int $id
+     * @param Service $service
      * @return RedirectResponse
-     * @throws \Exception
      */
-    public function destroy(Service $service)
+    public function destroy(Service $service): RedirectResponse
     {
         if (! Gate::allows('delete_service')) {
             flash('You are Not authorized to perform this action')->error();
-
             return back();
         }
         $service->delete();
         flash('Deleted Success')->important();
-
         return back();
     }
 }

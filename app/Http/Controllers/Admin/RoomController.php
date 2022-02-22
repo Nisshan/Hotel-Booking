@@ -5,15 +5,15 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Room;
 use Exception;
-use Illuminate\Contracts\View\Factory;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Gate;
+use Illuminate\Support\Str;
 use Illuminate\View\View;
-use Psy\Util\Str;
-use Spatie\MediaLibrary\Exceptions\FileCannotBeAdded\DiskDoesNotExist;
-use Spatie\MediaLibrary\Exceptions\FileCannotBeAdded\FileDoesNotExist;
-use Spatie\MediaLibrary\Exceptions\FileCannotBeAdded\FileIsTooBig;
+use Spatie\MediaLibrary\MediaCollections\Exceptions\DiskDoesNotExist;
+use Spatie\MediaLibrary\MediaCollections\Exceptions\FileDoesNotExist;
+use Spatie\MediaLibrary\MediaCollections\Exceptions\FileIsTooBig;
 use Yajra\DataTables\DataTables;
 
 /**
@@ -22,15 +22,12 @@ use Yajra\DataTables\DataTables;
  */
 class RoomController extends Controller
 {
-    /**
-     * @return mixed
-     * @throws Exception
-     */
-    public function getRooms()
+
+    public function getRooms() : Response
     {
-        $has_view = true;
-        $has_edit = true;
-        $has_delete = true;
+        $has_view = false;
+        $has_edit = false;
+        $has_delete = false;
         if (auth()->user()->can('view_room')) {
             $has_view = true;
         }
@@ -44,8 +41,6 @@ class RoomController extends Controller
         return DataTables::of(Room::query())
             ->addColumn('actions', function ($room) use ($has_view, $has_edit, $has_delete) {
                 $view = "";
-                $edit = "";
-                $delete = "";
                 if ($has_view) {
                     $view = view('admin.datatables.action-view')
                         ->with(['route' => route('rooms.show', ['room' => $room->id])])->render();
@@ -69,9 +64,9 @@ class RoomController extends Controller
     /**
      * Display a listing of the resource.
      *
-     * @return Factory|View
+     * @return View
      */
-    public function index()
+    public function index(): View
     {
         if (! Gate::allows('view_room')) {
             return abort(401);
@@ -83,9 +78,9 @@ class RoomController extends Controller
     /**
      * Show the form for creating a new resource.
      *
-     * @return Factory|View
+     * @return View
      */
-    public function create()
+    public function create(): View
     {
         if (! Gate::allows('create_room')) {
             return abort(401);
@@ -99,11 +94,10 @@ class RoomController extends Controller
      *
      * @param Request $request
      * @return RedirectResponse
-     * @throws DiskDoesNotExist
      * @throws FileDoesNotExist
      * @throws FileIsTooBig
      */
-    public function store(Request $request)
+    public function store(Request $request): RedirectResponse
     {
         if (! Gate::allows('create_room')) {
             return abort(401);
@@ -135,31 +129,35 @@ class RoomController extends Controller
      * Display the specified resource.
      *
      * @param Room $room
-     * @return Factory|View
+     * @return View
      */
-    public function show(Room $room)
+    public function show(Room $room): View
     {
         if (! Gate::allows('view_room')) {
             return abort(401);
         }
-        $images = $room->getMedia('rooms');
 
-        return view('admin.rooms.view', compact('room', 'images'));
+        return view('admin.rooms.view',[
+            'room' => $room,
+            'images' => $room->getMedia('rooms')
+        ]);
     }
 
     /**
      * Show the form for editing the specified resource.
      *
      * @param Room $room
-     * @return Factory|View
+     * @return View
      */
-    public function edit(Room $room)
+    public function edit(Room $room): View
     {
         if (! Gate::allows('edit_room')) {
             return abort(401);
         }
 
-        return view('admin.rooms.edit', compact('room'));
+        return view('admin.rooms.edit',[
+            'room' => $room
+        ]);
     }
 
     /**
@@ -168,11 +166,10 @@ class RoomController extends Controller
      * @param Request $request
      * @param Room $room
      * @return RedirectResponse
-     * @throws DiskDoesNotExist
      * @throws FileDoesNotExist
      * @throws FileIsTooBig
      */
-    public function update(Request $request, Room $room)
+    public function update(Request $request, Room $room): RedirectResponse
     {
         if (! Gate::allows('edit_room')) {
             return abort(401);
@@ -210,7 +207,7 @@ class RoomController extends Controller
      * @return RedirectResponse
      * @throws Exception
      */
-    public function destroy(Room $room)
+    public function destroy(Room $room): RedirectResponse
     {
         if (! Gate::allows('delete_room')) {
             flash('Not Authorized To delete room')->error();

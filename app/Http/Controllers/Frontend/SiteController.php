@@ -19,79 +19,84 @@ use Illuminate\View\View;
 class SiteController extends Controller
 {
     /**
-     * @return Factory|View
+     * @return View
      */
-    public function rooms()
+    public function rooms(): View
     {
-        $data['rooms'] = Room::where('status', 1)->with('media')->latest()->get();
-
-        return view('frontend.categorypage.rooms')->with($data);
+        return view('frontend.categorypage.rooms',[
+            'rooms' => Room::where('status', 1)->with('media')->latest()->get()
+        ]);
     }
 
     /**
-     * @return Factory|View
+     * @return View
      */
-    public function services()
+    public function services(): View
     {
-        $data['services'] = Service::where('status', 1)->with('media')->latest()->get();
-
-        return view('frontend.categorypage.services')->with($data);
-    }
-
-    public function places()
-    {
-        $data['places'] = Place::where('status', 1)->with('media')->latest()->get();
-
-        return view('frontend.categorypage.places')->with($data);
+        return view('frontend.categorypage.services',[
+            'services' => Service::where('status', 1)->with('media')->latest()->get()
+        ]);
     }
 
     /**
-     * @param $room
-     * @return Factory|View
+     * @return View
      */
-    public function singleRoom($room)
+    public function places(): View
+    {
+        return view('frontend.categorypage.places',[
+            'places' => Place::where('status', 1)->with('media')->latest()->get()
+        ]);
+    }
+
+    /**
+     * @param int $room
+     * @return View
+     */
+    public function singleRoom(int $room): View
     {
         $data['room'] = Room::where('room_no', $room)->with('media')->with('booking')->firstorFail();
         $disabledates = BookRoom::select('id', 'from', 'to')->where('room_id', $data['room']->id)->where('status', 1)->get();
 
+        //refactor all these name when doing test
         $nishan = [];
         foreach ($disabledates as $dates) {
             $disdate = [];
             $dates = CarbonPeriod::create($dates->from, $dates->to);
             foreach ($dates as $date) {
-                array_push($disdate, Carbon::parse($date)->format('m-d-Y'));
+                $disdate[] = Carbon::parse($date)->format('m-d-Y');
             }
-            array_push($nishan, $disdate);
+            $nishan[] = $disdate;
         }
-//        dd($nishan);
         $data['disabledates'] = [];
         foreach ($nishan as $nis) {
             foreach ($nis as $n) {
                 $data['disabledates'][] = $n;
             }
         }
-//        dd($data['disabledates']);
         $data['dates'] = BookRoom::where('room_id', $data['room']->id)->where('status', 1)->pluck('to')->toArray();
-//                dd($data['dates']);
-//        $data['disabledates'] = [];
-//        foreach ($data['dates'] as $date) {
-//            array_push($data['disabledates'],Carbon::parse($date)->format('m-d-Y')) ;
-//        }
-//        dd($data['disabledates']);
         return view('frontend.singlepage.singleroom')->with($data);
     }
 
-    public function visitPlace($name)
+    /**
+     * @param string $name
+     * @return View
+     */
+    public function visitPlace(string $name): View
     {
-        $data['place'] = Place::where('name', $name)->with('media')->firstorFail();
 
-        return view('frontend.singlepage.placetovisit')->with($data);
+        return view('frontend.singlepage.placetovisit',[
+            'place' =>  Place::where('name', $name)->with('media')->firstOrFail()
+        ]);
     }
 
-    public function servicePage($name)
+    /**
+     * @param string $name
+     * @return View
+     */
+    public function servicePage(string $name): View
     {
-        $data['service'] = Service::where('name', $name)->with('media')->firstorfail();
-
-        return view('frontend.singlepage.servicepage')->with($data);
+        return view('frontend.singlepage.servicepage',[
+            'service' => Service::where('name', $name)->with('media')->firstorfail()
+        ]);
     }
 }

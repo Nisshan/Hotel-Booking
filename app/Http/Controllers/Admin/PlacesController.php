@@ -4,16 +4,15 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Place;
-use Illuminate\Contracts\View\Factory;
+use Exception;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Gate;
+use Illuminate\Support\Str;
 use Illuminate\View\View;
-use Psy\Util\Str;
-use Spatie\MediaLibrary\Exceptions\FileCannotBeAdded\DiskDoesNotExist;
-use Spatie\MediaLibrary\Exceptions\FileCannotBeAdded\FileDoesNotExist;
-use Spatie\MediaLibrary\Exceptions\FileCannotBeAdded\FileIsTooBig;
+use Spatie\MediaLibrary\MediaCollections\Exceptions\FileDoesNotExist;
+use Spatie\MediaLibrary\MediaCollections\Exceptions\FileIsTooBig;
 use Yajra\DataTables\DataTables;
 
 /**
@@ -22,11 +21,8 @@ use Yajra\DataTables\DataTables;
  */
 class PlacesController extends Controller
 {
-    /**
-     * @return mixed
-     * @throws \Exception
-     */
-    public function getPlaces()
+
+    public function getPlaces() : Response
     {
         $has_view = false;
         $has_edit = false;
@@ -62,35 +58,34 @@ class PlacesController extends Controller
                 }
 
                 return $view;
-            })->rawColumns(['actions'])
+            })
+            ->rawColumns(['actions'])
             ->make('true');
     }
 
     /**
      * Display a listing of the resource.
      *
-     * @return Factory|View
+     * @return View
      */
-    public function index()
+    public function index(): View
     {
         if (! Gate::allows('view_place')) {
             return abort(401);
         }
-
         return view('admin.places.index');
     }
 
     /**
      * Show the form for creating a new resource.
      *
-     * @return Response
+     * @return View
      */
-    public function create()
+    public function create(): View
     {
         if (! Gate::allows('create_place')) {
             return abort(401);
         }
-
         return view('admin.places.create');
     }
 
@@ -98,12 +93,11 @@ class PlacesController extends Controller
      * Store a newly created resource in storage.
      *
      * @param Request $request
-     * @return Response
-     * @throws DiskDoesNotExist
+     * @return RedirectResponse
      * @throws FileDoesNotExist
      * @throws FileIsTooBig
      */
-    public function store(Request $request)
+    public function store(Request $request) : RedirectResponse
     {
         if (! Gate::allows('create_place')) {
             return abort(401);
@@ -122,7 +116,7 @@ class PlacesController extends Controller
                 ->toMediaCollection('places');
         }
         $place->save();
-        flash('Created Successfull')->success();
+        flash('Created Successfully')->success();
 
         return redirect()->action('Admin\PlacesController@index');
     }
@@ -131,31 +125,36 @@ class PlacesController extends Controller
      * Display the specified resource.
      *
      * @param Place $place
-     * @return Response
+     * @return View
      */
-    public function show(Place $place)
+    public function show(Place $place) : View
     {
         if (! Gate::allows('view_place')) {
             return abort(401);
         }
         $images = $place->getMedia('places');
 
-        return view('admin.places.view', compact('place', 'images'));
+        return view('admin.places.view', [
+            'place'  => $place,
+            'images' => $images
+        ]);
     }
 
     /**
      * Show the form for editing the specified resource.
      *
      * @param Place $place
-     * @return Response
+     * @return View
      */
-    public function edit(Place $place)
+    public function edit(Place $place): View
     {
         if (! Gate::allows('edit_place')) {
             return abort(401);
         }
 
-        return view('admin.places.edit', compact('place'));
+        return view('admin.places.edit', [
+            'place' => $place
+        ]);
     }
 
     /**
@@ -164,11 +163,10 @@ class PlacesController extends Controller
      * @param Request $request
      * @param Place $place
      * @return RedirectResponse
-     * @throws DiskDoesNotExist
      * @throws FileDoesNotExist
      * @throws FileIsTooBig
      */
-    public function update(Request $request, Place $place)
+    public function update(Request $request, Place $place) : RedirectResponse
     {
         if (! Gate::allows('edit_place')) {
             return abort(401);
@@ -176,7 +174,7 @@ class PlacesController extends Controller
         $place->name = $request->name;
         $place->description = $request->description;
         $place->travel_description = $request->travel_description;
-        $place->status = $request->status || 1;
+        $place->status = $request->status;
         if ($request->cover) {
             $place->getFirstMedia('place-cover')->delete();
             $place->addMediaFromRequest('cover')
@@ -199,10 +197,10 @@ class PlacesController extends Controller
      * Remove the specified resource from storage.
      *
      * @param Place $place
-     * @return Response
-     * @throws \Exception
+     * @return RedirectResponse
+     * @throws Exception
      */
-    public function destroy(Place $place)
+    public function destroy(Place $place): RedirectResponse
     {
         if (! Gate::allows('delete_place')) {
             flash('Not Authorized To delete Place')->error();
@@ -211,7 +209,6 @@ class PlacesController extends Controller
         }
         $place->delete();
         flash('Deleted Successfully')->important();
-
         return back();
     }
 }

@@ -4,7 +4,6 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use Exception;
-use Illuminate\Contracts\View\Factory;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
@@ -20,11 +19,8 @@ use Yajra\DataTables\DataTables;
  */
 class RolesController extends Controller
 {
-    /**
-     * @return mixed
-     * @throws Exception
-     */
-    public function getRoles()
+
+    public function getRoles(): Response
     {
         $has_view = false;
         $has_edit = false;
@@ -42,8 +38,6 @@ class RolesController extends Controller
         return DataTables::of(Role::query())
             ->addColumn('actions', function ($role) use ($has_view, $has_edit, $has_delete) {
                 $view = "";
-                $edit = "";
-                $delete = "";
                 if ($has_view) {
                     $view = view('admin.datatables.action-view')
                         ->with(['route' => route('roles.show', ['role' => $role->id])])->render();
@@ -76,9 +70,9 @@ class RolesController extends Controller
     /**
      * Display a listing of the resource.
      *
-     * @return Response
+     * @return View
      */
-    public function index()
+    public function index() : View
     {
         if (! Gate::allows('view_role')) {
             return abort(401);
@@ -90,71 +84,77 @@ class RolesController extends Controller
     /**
      * Show the form for creating a new resource.
      *
-     * @return Response
+     * @return View
      */
-    public function create()
+    public function create() : View
     {
         if (! Gate::allows('create_role')) {
             return abort(401);
         }
-        $attributes = Ability::all()->groupBy('entity_type');
 
-        return view('admin.roles.create', compact('attributes'));
+        return view('admin.roles.create', [
+            'attributes' => Ability::all()->groupBy('entity_type')
+        ]);
     }
 
     /**
      * Store a newly created resource in storage.
-     *
      * @param Request $request
-     * @return Response
+     * @return RedirectResponse
      */
-    public function store(Request $request)
+    public function store(Request $request): RedirectResponse
     {
         if (! Gate::allows('create_role')) {
             return abort(401);
         }
+
         $request->validate(['name' => 'required|unique:roles|min:5']);
+
         $role = new Role();
         $role->name = $request->name;
-        $role->title = $request->title ? $request->title : $request->name;
+        $role->title = $request->title ?: $request->name;
         $role->save();
         $role->allow($request->input('permissions'));
-        flash('Role Created ')->success();
 
+        flash('Role Created ')->success();
         return redirect()->action('Admin\RolesController@index');
     }
 
     /**
      * Display the specified resource.
      *
-     * @param  int  $id
-     * @return void
+     * @param Role $role
+     * @return View
      */
-    public function show(Role $role)
+    public function show(Role $role) : View
     {
         if (! Gate::allows('view_role')) {
             return abort(401);
         }
-        $permissions = $role->abilities->pluck('title')->toArray();
 
-        return view('admin.roles.view', compact('role', 'permissions'));
+        return view('admin.roles.view', [
+            'role' => $role,
+            'permissions' => $role->abilities->pluck('title')->toArray()
+        ]);
     }
 
     /**
      * Show the form for editing the specified resource.
      *
      * @param Role $role
-     * @return Factory|View
+     * @return View
      */
-    public function edit(Role $role)
+    public function edit(Role $role) : View
     {
         if (! Gate::allows('edit_role')) {
             return abort(401);
         }
-        $permissions = $role->abilities->pluck('title')->toArray();
-        $attributes = Ability::all()->groupBy('sort-name');
 
-        return view('admin.roles.edit', compact('role', 'attributes', 'permissions'));
+        return view('admin.roles.edit',[
+            'role' => $role,
+            'attributes'  => Ability::all()->groupBy('sort-name'),
+            'permissions' => $role->abilities->pluck('title')->toArray()
+        ]);
     }
 
     /**
@@ -164,7 +164,7 @@ class RolesController extends Controller
      * @param Request $request
      * @return RedirectResponse
      */
-    public function update(Role $role, Request $request)
+    public function update(Role $role, Request $request): RedirectResponse
     {
         if (! Gate::allows('edit_role')) {
             return abort(401);
@@ -173,14 +173,16 @@ class RolesController extends Controller
         $request->validate(['name' => 'required | unique:roles,name,'.$role->id]);
 
         $role->name = $request->name;
-        $role->title = $request->title ? $request->title : $request->name;
+        $role->title = $request->title ?: $request->name;
         $role->save();
-        foreach ($role->getAbilities() as $ability) {
-            $role->disallow($ability);
-        }
-        $role->allow($request->input('permissions'));
-        flash('Role Updated Successfully');
 
+        $role->getAbilities()->each(function ($ability) use($role){
+            $role->disallow($ability);
+        });
+
+        $role->allow($request->input('permissions'));
+
+        flash('Role Updated Successfully');
         return redirect()->action('Admin\RolesController@index');
     }
 
@@ -191,16 +193,14 @@ class RolesController extends Controller
      * @return RedirectResponse
      * @throws Exception
      */
-    public function destroy(Role $role)
+    public function destroy(Role $role): RedirectResponse
     {
         if (! Gate::allows('delete_role')) {
             flash('You are Not authorized to perform this action')->error();
-
             return back();
         }
         $role->delete();
         flash('Role Deleted Successfully')->important();
-
         return back();
     }
 }

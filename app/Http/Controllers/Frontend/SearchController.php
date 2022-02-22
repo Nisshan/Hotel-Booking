@@ -17,11 +17,10 @@ class SearchController extends Controller
 {
     /**
      * @param Request $request
-     * @return Factory|View
+     * @return View
      */
-    public function search(Request $request)
+    public function search(Request $request): View
     {
-//        dd($request);
         $time_from = Carbon::parse($request->from)->toDateTime();
         $time_to = Carbon::parse($request->to)->toDateTime();
 
@@ -36,6 +35,10 @@ class SearchController extends Controller
             $rooms = null;
         }
 
-        return view('frontend.search.available', compact('rooms', 'time_from', 'time_to'));
+        return view('frontend.search.available', [
+            'rooms' => $rooms,
+            'time_from' => $time_from,
+            'time_to' => $time_to
+        ]);
     }
 }

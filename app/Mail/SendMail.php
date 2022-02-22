@@ -5,6 +5,7 @@ namespace App\Mail;
 use Illuminate\Bus\Queueable;
 use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
+use Illuminate\View\View;
 
 /**
  * Class SendMail
@@ -29,10 +30,10 @@ class SendMail extends Mailable
     /**
      * Build the message.
      *
-     * @return $this
+     * @return SendMail
      */
-    public function build()
+    public function build(): SendMail
     {
-        return $this->view('view.name');
+        return $this->view('mail.send-mail');
     }
 }

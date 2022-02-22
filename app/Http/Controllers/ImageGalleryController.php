@@ -3,28 +3,27 @@
 namespace App\Http\Controllers;
 
 use App\ImageGallery;
+use Illuminate\Contracts\Foundation\Application;
+use Illuminate\Contracts\Routing\ResponseFactory;
+use Illuminate\Http\JsonResponse;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Storage;
-use Spatie\MediaLibrary\Models\Media;
+use Illuminate\Http\Response;
+use Illuminate\View\View;
+use Spatie\MediaLibrary\MediaCollections\Exceptions\FileCannotBeAdded;
+use Spatie\MediaLibrary\MediaCollections\Exceptions\FileDoesNotExist;
+use Spatie\MediaLibrary\MediaCollections\Exceptions\FileIsTooBig;
+use Spatie\MediaLibrary\MediaCollections\Models\Media;
 
 class ImageGalleryController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function index()
-    {
-        //
-    }
 
     /**
      * Show the form for creating a new resource.
      *
-     * @return \Illuminate\Http\Response
+     * @return View
      */
-    public function create()
+    public function create(): View
     {
         return view('admin.galleries.create');
     }
@@ -32,10 +31,13 @@ class ImageGalleryController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param \Illuminate\Http\Request $request
-     * @return \Illuminate\Http\Response
+     * @param Request $request
+     * @return RedirectResponse
+     * @return RedirectResponse
+     * @throws FileDoesNotExist
+     * @throws FileIsTooBig|FileCannotBeAdded
      */
-    public function store(Request $request)
+    public function store(Request $request): RedirectResponse
     {
         $cover = $request->file('cover');
         $gallery = $request->gallery_image;
@@ -45,13 +47,13 @@ class ImageGalleryController extends Controller
         $imagegallery->photo_by = $request->photo_by;
         if ($cover) {
             $imagegallery->addMediaFromRequest('cover')
-                ->usingName($request->imagename ? $request->imagename : 'image')
+                ->usingName($request->imagename ?: 'image')
                 ->withResponsiveImages()
                 ->toMediaCollection('posts');
         }
         if ($gallery) {
             $imagegallery->addMediaFromUrl($gallery)
-                ->usingName($request->imagename ? $request->imagename : 'image')
+                ->usingName($request->imagename ?: 'image')
                 ->withResponsiveImages()
                 ->toMediaCollection('posts');
         }
@@ -63,66 +65,38 @@ class ImageGalleryController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param \App\ImageGallery $imageGallery
-     * @return \Illuminate\Http\Response
+     * @param int $id
+     * @return View
      */
-    public function show($id)
+    public function show(int $id): View
     {
-        $gallery = ImageGallery::with('media')->find($id);
-//        dd($gallery->getFirstMedia('posts'));
-//       $images = $gallery->getFirstMedia('posts');
-//       dd($images, $media, $gallery);
-        return view('admin.galleries.view', compact('gallery'));
+        return view('admin.galleries.view', [
+            'gallery' => ImageGallery::with('media')->find($id)
+        ]);
     }
 
     /**
      * Show the form for editing the specified resource.
      *
-     * @param \App\ImageGallery $imageGallery
-     * @return \Illuminate\Http\Response
+     * @param int $id
+     * @return View
      */
-    public function edit($id)
+    public function edit(int $id): View
     {
-        $gallery = ImageGallery::with('media')->find($id);
-//        dd($gallery->getFirstMedia('posts'));
-        return view('admin.galleries.edit', compact('gallery'));
+        return view('admin.galleries.edit',[
+            'gallery' => ImageGallery::with('media')->find($id)
+        ]);
     }
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param \Illuminate\Http\Request $request
-     * @param \App\ImageGallery $imageGallery
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, ImageGallery $imageGallery)
-    {
-        //
-    }
 
     /**
-     * Remove the specified resource from storage.
-     *
-     * @param \App\ImageGallery $imageGallery
-     * @return \Illuminate\Http\Response
+     * @param string $searchTerm
+     * @return JsonResponse
      */
-    public function destroy(ImageGallery $imageGallery)
-    {
-        //
-    }
-
-    /**
-     * @param Request $request
-     * @param $searchTerm
-     * @return \Illuminate\Http\JsonResponse
-     */
-    public function searchImage(Request $request, $searchTerm)
+    public function searchImage(string $searchTerm): JsonResponse
     {
         $images = Media::where('name', 'LIKE', '%' . $searchTerm . '%')->get();
-        ////        $images = \DB::table('media')->select('')->where('cover_keyword', 'LIKE', '%' . $searchTerm . '%')->groupBy('cover')->take(10)->get();
-        ////        $images = $images->map(function ($image) {
-        ////            return asset(Storage::url('images/' . $image->cover));
-        ////        });
+
         $imageurl = [];
         foreach ($images as $image) {
             $imageurl[] = $image->getURL();
@@ -131,7 +105,10 @@ class ImageGalleryController extends Controller
         return response()->json($imageurl);
     }
 
-    public function getLatestImage()
+    /**
+     * @return Response
+     */
+    public function getLatestImage(): Response
     {
         $images = Media::latest()->take(10)->get();
         $imageurl = [];

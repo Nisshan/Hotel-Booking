@@ -17,15 +17,15 @@ use Illuminate\View\View;
 class HomeController extends Controller
 {
     /**
-     * @return Factory|View
+     * @return View
      */
-    public function index()
+    public function index(): View
     {
-        $data['rooms'] = Room::where('status', 1)->with('media')->latest()->take(7)->get();
-        $data['facilities'] = Service::where('status', 1)->with('media')->latest()->take(4)->get();
-        $data['places'] = Place::where('status', 1)->with('media')->latest()->take(5)->get();
-        $data['testimonials'] = Testimonial::where('status', 1)->with('media')->latest()->take(4)->get();
-
-        return view('frontend.index')->with($data);
+        return view('frontend.index',[
+            'rooms' =>  Room::where('status', 1)->with('media')->latest()->take(7)->get(),
+            'facilities' => Service::where('status', 1)->with('media')->latest()->take(4)->get(),
+            'places' => Place::where('status', 1)->with('media')->latest()->take(5)->get(),
+            'testimonials' => Testimonial::where('status', 1)->with('media')->latest()->take(4)->get()
+        ]);
     }
 }
