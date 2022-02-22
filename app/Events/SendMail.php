@@ -16,14 +16,14 @@ class SendMail
     use Dispatchable;
     use InteractsWithSockets;
     use SerializesModels;
-    public $response;
+    public Mixed $response;
 
     /**
      * Create a new event instance.
      *
      * @return void
      */
-    public function __construct($response)
+    public function __construct(Mixed $response)
     {
         $this->response = $response;
     }

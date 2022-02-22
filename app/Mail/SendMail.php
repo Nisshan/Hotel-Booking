@@ -15,14 +15,14 @@ class SendMail extends Mailable
 {
     use Queueable;
     use SerializesModels;
-    public $response;
+    public Mixed $response;
 
     /**
      * Create a new message instance.
      *
      * @return void
      */
-    public function __construct($response)
+    public function __construct(Mixed $response)
     {
         $this->response = $response;
     }

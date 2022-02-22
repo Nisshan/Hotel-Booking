@@ -72,7 +72,7 @@ class Room extends Model implements HasMedia
     /**
      * @return HasMany
      */
-    public function booking()
+    public function booking(): HasMany
     {
         return $this->hasMany(BookRoom::class, 'room_id')->where('status', 1);
     }
