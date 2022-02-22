@@ -4,7 +4,6 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Service;
-use Illuminate\Contracts\View\Factory;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
@@ -20,7 +19,6 @@ use Yajra\DataTables\DataTables;
  */
 class ServicesController extends Controller
 {
-
     public function getServices(): Response
     {
         $has_view = false;
@@ -124,9 +122,9 @@ class ServicesController extends Controller
             return abort(401);
         }
 
-        return view('admin.services.view',[
+        return view('admin.services.view', [
             'service' => $service,
-            'image' => $service->getFirstMedia('service')->getUrl('thumb')
+            'image' => $service->getFirstMedia('service')->getUrl('thumb'),
         ]);
     }
 
@@ -144,7 +142,7 @@ class ServicesController extends Controller
 
         return view('admin.services.edit', [
             'service' => $service,
-            'image' => $service->getFirstMedia('service')->getUrl('thumb')
+            'image' => $service->getFirstMedia('service')->getUrl('thumb'),
         ]);
     }
 
@@ -183,10 +181,12 @@ class ServicesController extends Controller
     {
         if (! Gate::allows('delete_service')) {
             flash('You are Not authorized to perform this action')->error();
+
             return back();
         }
         $service->delete();
         flash('Deleted Success')->important();
+
         return back();
     }
 }

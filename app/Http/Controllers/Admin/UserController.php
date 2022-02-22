@@ -122,9 +122,9 @@ class UserController extends Controller
             return abort(401);
         }
 
-        return view('admin.users.view',[
+        return view('admin.users.view', [
             'user' => $user,
-            'abilities' => $user->getAbilities()
+            'abilities' => $user->getAbilities(),
         ]);
     }
 
@@ -140,9 +140,9 @@ class UserController extends Controller
             return abort(401);
         }
 
-        return view('admin.users.edit',[
+        return view('admin.users.edit', [
             'user' => $user,
-            'roles' => Role::all()
+            'roles' => Role::all(),
         ]);
     }
 

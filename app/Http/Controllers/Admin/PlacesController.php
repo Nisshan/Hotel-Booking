@@ -21,8 +21,7 @@ use Yajra\DataTables\DataTables;
  */
 class PlacesController extends Controller
 {
-
-    public function getPlaces() : Response
+    public function getPlaces(): Response
     {
         $has_view = false;
         $has_edit = false;
@@ -73,6 +72,7 @@ class PlacesController extends Controller
         if (! Gate::allows('view_place')) {
             return abort(401);
         }
+
         return view('admin.places.index');
     }
 
@@ -86,6 +86,7 @@ class PlacesController extends Controller
         if (! Gate::allows('create_place')) {
             return abort(401);
         }
+
         return view('admin.places.create');
     }
 
@@ -97,7 +98,7 @@ class PlacesController extends Controller
      * @throws FileDoesNotExist
      * @throws FileIsTooBig
      */
-    public function store(Request $request) : RedirectResponse
+    public function store(Request $request): RedirectResponse
     {
         if (! Gate::allows('create_place')) {
             return abort(401);
@@ -127,7 +128,7 @@ class PlacesController extends Controller
      * @param Place $place
      * @return View
      */
-    public function show(Place $place) : View
+    public function show(Place $place): View
     {
         if (! Gate::allows('view_place')) {
             return abort(401);
@@ -135,8 +136,8 @@ class PlacesController extends Controller
         $images = $place->getMedia('places');
 
         return view('admin.places.view', [
-            'place'  => $place,
-            'images' => $images
+            'place' => $place,
+            'images' => $images,
         ]);
     }
 
@@ -153,7 +154,7 @@ class PlacesController extends Controller
         }
 
         return view('admin.places.edit', [
-            'place' => $place
+            'place' => $place,
         ]);
     }
 
@@ -166,7 +167,7 @@ class PlacesController extends Controller
      * @throws FileDoesNotExist
      * @throws FileIsTooBig
      */
-    public function update(Request $request, Place $place) : RedirectResponse
+    public function update(Request $request, Place $place): RedirectResponse
     {
         if (! Gate::allows('edit_place')) {
             return abort(401);
@@ -209,6 +210,7 @@ class PlacesController extends Controller
         }
         $place->delete();
         flash('Deleted Successfully')->important();
+
         return back();
     }
 }

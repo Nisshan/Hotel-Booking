@@ -19,8 +19,7 @@ use Yajra\DataTables\DataTables;
  */
 class RoomBookingController extends Controller
 {
-
-    public function getBookedRoom() : Response
+    public function getBookedRoom(): Response
     {
         $has_view = false;
         $has_edit = false;
@@ -34,6 +33,7 @@ class RoomBookingController extends Controller
         if (auth()->user()->can('delete_place')) {
             $has_delete = true;
         }
+
         return DataTables::of(BookRoom::with('room')->get())
             ->addColumn('actions', function ($bookroom) use ($has_view, $has_edit, $has_delete) {
                 $view = "";
@@ -83,7 +83,7 @@ class RoomBookingController extends Controller
     public function create(): View
     {
         return view('admin.bookings.create', [
-            'rooms' => Room::with('booking')->get()
+            'rooms' => Room::with('booking')->get(),
         ]);
     }
 
@@ -111,8 +111,6 @@ class RoomBookingController extends Controller
         return back();
     }
 
-
-
     /**
      * Show the form for editing the specified resource.
      *
@@ -122,7 +120,7 @@ class RoomBookingController extends Controller
     public function edit(int $id): View
     {
         return view('admin.bookings.edit', [
-            'booking' =>  BookRoom::with('room')->findOrFail($id)
+            'booking' => BookRoom::with('room')->findOrFail($id),
         ]);
     }
 
