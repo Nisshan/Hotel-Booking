@@ -17,8 +17,6 @@ use Illuminate\View\View;
  */
 class BookingController extends Controller
 {
-
-
     /**
      * Show the form for creating a new resource.
      *
@@ -27,7 +25,7 @@ class BookingController extends Controller
     public function create(): View
     {
         return view('frontend.create', [
-            'rooms' => Room::get()
+            'rooms' => Room::get(),
         ]);
     }
 
@@ -64,17 +62,10 @@ class BookingController extends Controller
                 'room_no' => $data->room_no,
              ],
             function ($message) {
-                 $message->to('timsinanishan1@gmail.com');
-             }
+                $message->to('timsinanishan1@gmail.com');
+            }
         );
 
         return back();
     }
-
-
-
-
-
-
-
 }

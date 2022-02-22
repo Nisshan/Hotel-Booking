@@ -5,7 +5,6 @@ namespace App\Http\Controllers\Frontend;
 use App\Http\Controllers\Controller;
 use App\Room;
 use Carbon\Carbon;
-use Illuminate\Contracts\View\Factory;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
 
@@ -38,7 +37,7 @@ class SearchController extends Controller
         return view('frontend.search.available', [
             'rooms' => $rooms,
             'time_from' => $time_from,
-            'time_to' => $time_to
+            'time_to' => $time_to,
         ]);
     }
 }

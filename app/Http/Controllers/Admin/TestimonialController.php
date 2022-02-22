@@ -5,13 +5,11 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Testimonial;
 use Exception;
-use Illuminate\Contracts\View\Factory;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\View\View;
-use Spatie\MediaLibrary\MediaCollections\Exceptions\DiskDoesNotExist;
 use Spatie\MediaLibrary\MediaCollections\Exceptions\FileDoesNotExist;
 use Spatie\MediaLibrary\MediaCollections\Exceptions\FileIsTooBig;
 use Yajra\DataTables\DataTables;
@@ -124,9 +122,9 @@ class TestimonialController extends Controller
             return abort(401);
         }
 
-        return view('admin.testimonies.view',[
+        return view('admin.testimonies.view', [
             'testimonial' => $testimonial,
-            'image' => $testimonial->getFirstMedia('testimony')->getUrl('thumb')
+            'image' => $testimonial->getFirstMedia('testimony')->getUrl('thumb'),
         ]);
     }
 
@@ -142,9 +140,9 @@ class TestimonialController extends Controller
             return abort(401);
         }
 
-        return view('admin.testimonies.edit',[
+        return view('admin.testimonies.edit', [
             'testimonial' => $testimonial,
-            'image' => $testimonial->getFirstMedia('testimony')->getUrl('thumb')
+            'image' => $testimonial->getFirstMedia('testimony')->getUrl('thumb'),
         ]);
     }
 

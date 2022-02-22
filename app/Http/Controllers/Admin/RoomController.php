@@ -11,7 +11,6 @@ use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Str;
 use Illuminate\View\View;
-use Spatie\MediaLibrary\MediaCollections\Exceptions\DiskDoesNotExist;
 use Spatie\MediaLibrary\MediaCollections\Exceptions\FileDoesNotExist;
 use Spatie\MediaLibrary\MediaCollections\Exceptions\FileIsTooBig;
 use Yajra\DataTables\DataTables;
@@ -22,8 +21,7 @@ use Yajra\DataTables\DataTables;
  */
 class RoomController extends Controller
 {
-
-    public function getRooms() : Response
+    public function getRooms(): Response
     {
         $has_view = false;
         $has_edit = false;
@@ -137,9 +135,9 @@ class RoomController extends Controller
             return abort(401);
         }
 
-        return view('admin.rooms.view',[
+        return view('admin.rooms.view', [
             'room' => $room,
-            'images' => $room->getMedia('rooms')
+            'images' => $room->getMedia('rooms'),
         ]);
     }
 
@@ -155,8 +153,8 @@ class RoomController extends Controller
             return abort(401);
         }
 
-        return view('admin.rooms.edit',[
-            'room' => $room
+        return view('admin.rooms.edit', [
+            'room' => $room,
         ]);
     }
 

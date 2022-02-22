@@ -19,7 +19,6 @@ use Yajra\DataTables\DataTables;
  */
 class RolesController extends Controller
 {
-
     public function getRoles(): Response
     {
         $has_view = false;
@@ -72,7 +71,7 @@ class RolesController extends Controller
      *
      * @return View
      */
-    public function index() : View
+    public function index(): View
     {
         if (! Gate::allows('view_role')) {
             return abort(401);
@@ -86,14 +85,14 @@ class RolesController extends Controller
      *
      * @return View
      */
-    public function create() : View
+    public function create(): View
     {
         if (! Gate::allows('create_role')) {
             return abort(401);
         }
 
         return view('admin.roles.create', [
-            'attributes' => Ability::all()->groupBy('entity_type')
+            'attributes' => Ability::all()->groupBy('entity_type'),
         ]);
     }
 
@@ -117,6 +116,7 @@ class RolesController extends Controller
         $role->allow($request->input('permissions'));
 
         flash('Role Created ')->success();
+
         return redirect()->action('Admin\RolesController@index');
     }
 
@@ -126,7 +126,7 @@ class RolesController extends Controller
      * @param Role $role
      * @return View
      */
-    public function show(Role $role) : View
+    public function show(Role $role): View
     {
         if (! Gate::allows('view_role')) {
             return abort(401);
@@ -134,7 +134,7 @@ class RolesController extends Controller
 
         return view('admin.roles.view', [
             'role' => $role,
-            'permissions' => $role->abilities->pluck('title')->toArray()
+            'permissions' => $role->abilities->pluck('title')->toArray(),
         ]);
     }
 
@@ -144,16 +144,16 @@ class RolesController extends Controller
      * @param Role $role
      * @return View
      */
-    public function edit(Role $role) : View
+    public function edit(Role $role): View
     {
         if (! Gate::allows('edit_role')) {
             return abort(401);
         }
 
-        return view('admin.roles.edit',[
+        return view('admin.roles.edit', [
             'role' => $role,
-            'attributes'  => Ability::all()->groupBy('sort-name'),
-            'permissions' => $role->abilities->pluck('title')->toArray()
+            'attributes' => Ability::all()->groupBy('sort-name'),
+            'permissions' => $role->abilities->pluck('title')->toArray(),
         ]);
     }
 
@@ -176,13 +176,14 @@ class RolesController extends Controller
         $role->title = $request->title ?: $request->name;
         $role->save();
 
-        $role->getAbilities()->each(function ($ability) use($role){
+        $role->getAbilities()->each(function ($ability) use ($role) {
             $role->disallow($ability);
         });
 
         $role->allow($request->input('permissions'));
 
         flash('Role Updated Successfully');
+
         return redirect()->action('Admin\RolesController@index');
     }
 
@@ -197,10 +198,12 @@ class RolesController extends Controller
     {
         if (! Gate::allows('delete_role')) {
             flash('You are Not authorized to perform this action')->error();
+
             return back();
         }
         $role->delete();
         flash('Role Deleted Successfully')->important();
+
         return back();
     }
 }

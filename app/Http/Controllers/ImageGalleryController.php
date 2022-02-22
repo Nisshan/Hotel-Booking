@@ -3,8 +3,6 @@
 namespace App\Http\Controllers;
 
 use App\ImageGallery;
-use Illuminate\Contracts\Foundation\Application;
-use Illuminate\Contracts\Routing\ResponseFactory;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -17,7 +15,6 @@ use Spatie\MediaLibrary\MediaCollections\Models\Media;
 
 class ImageGalleryController extends Controller
 {
-
     /**
      * Show the form for creating a new resource.
      *
@@ -71,7 +68,7 @@ class ImageGalleryController extends Controller
     public function show(int $id): View
     {
         return view('admin.galleries.view', [
-            'gallery' => ImageGallery::with('media')->find($id)
+            'gallery' => ImageGallery::with('media')->find($id),
         ]);
     }
 
@@ -83,11 +80,10 @@ class ImageGalleryController extends Controller
      */
     public function edit(int $id): View
     {
-        return view('admin.galleries.edit',[
-            'gallery' => ImageGallery::with('media')->find($id)
+        return view('admin.galleries.edit', [
+            'gallery' => ImageGallery::with('media')->find($id),
         ]);
     }
-
 
     /**
      * @param string $searchTerm

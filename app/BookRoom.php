@@ -55,7 +55,7 @@ class BookRoom extends Model
      */
     protected $casts = [
         'from' => 'datetime',
-        'to'   => 'datetime'
+        'to' => 'datetime',
     ];
 
     /**
