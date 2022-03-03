@@ -8,7 +8,6 @@ use Exception;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
-use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Str;
 use Illuminate\View\View;
@@ -120,7 +119,7 @@ class PlacesController extends Controller
         $place->addMediaFromRequest('cover')
             ->toMediaCollection('place-cover');
 
-        if($request->file('images')){
+        if ($request->file('images')) {
             foreach ($request->file('images') as $image) {
                 $place->addMedia($image)
                     ->toMediaCollection('places');

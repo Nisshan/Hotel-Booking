@@ -56,7 +56,5 @@ function login($user = null)
  */
 function admin(): User
 {
-    return User::where('email','superadmin@hotel.com')->first();
+    return User::where('email', 'superadmin@hotel.com')->first();
 }
-
-

@@ -4,35 +4,35 @@ use App\Place;
 use Database\Seeders\AbilitiesSeeder;
 use Database\Seeders\UserTableSeeder;
 use Illuminate\Http\UploadedFile;
-use Spatie\MediaLibrary\MediaCollections\Models\Media;
 use function Pest\Laravel\assertDatabaseHas;
+use Spatie\MediaLibrary\MediaCollections\Models\Media;
 
-beforeEach(function (){
+beforeEach(function () {
     $this->seed(UserTableSeeder::class);
     $this->seed(AbilitiesSeeder::class);
 });
 
-test('authorized user can view places list', function (){
-   login(admin());
-   $this->get('/admin/places')
+test('authorized user can view places list', function () {
+    login(admin());
+    $this->get('/admin/places')
        ->assertStatus(200);
 });
 
 
-test('unauthorized user are redirected to 401', function (){
+test('unauthorized user are redirected to 401', function () {
     login();
     $this->get('/admin/places')
         ->assertStatus(401);
 });
 
 
-test('authorized user can add new place', function (){
+test('authorized user can add new place', function () {
     login(admin());
     $this->get('/admin/places/create')
         ->assertStatus(200);
 });
 
-test('new places can be stored', function (){
+test('new places can be stored', function () {
     login(admin());
 
     Storage::fake('public');
@@ -45,16 +45,14 @@ test('new places can be stored', function (){
         'cover' => $file,
         'description' => 'Good place to be',
         'travel_description' => 'Easy bus access',
-        'user_id' => auth()->id()
+        'user_id' => auth()->id(),
     ];
 
-     $this->post(route('places.store'), $attributes)
+    $this->post(route('places.store'), $attributes)
          ->assertSessionDoesntHaveErrors()
         ->assertRedirect(route('places.index'));
 
-     expect(Media::count())->toBe(1);
-     expect(Place::count())->toBe(1);
-     assertDatabaseHas('places', Arr::except($attributes, ['cover']));
-
+    expect(Media::count())->toBe(1);
+    expect(Place::count())->toBe(1);
+    assertDatabaseHas('places', Arr::except($attributes, ['cover']));
 });
-
