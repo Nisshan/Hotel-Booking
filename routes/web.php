@@ -67,8 +67,8 @@ Route::group(['prefix' => 'admin/'], function () {
         Route::resource('testimonials', TestimonialController::class);
         Route::get('getTestimonies', [TestimonialController::class,'getTestimonies']);
 
-        Route::resource('places', PlacesController::class);
         Route::get('getPlaces', [PlacesController::class,'getPlaces']);
+        Route::resource('places', PlacesController::class);
 
         Route::resource('services', ServicesController::class);
         Route::get('getServices', [ServicesController::class,'getServices']);

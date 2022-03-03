@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\User;
+use Exception;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
@@ -18,6 +19,9 @@ use Yajra\DataTables\DataTables;
  */
 class UserController extends Controller
 {
+    /**
+     * @throws Exception
+     */
     public function getUsers(): Response
     {
         $has_view = false;

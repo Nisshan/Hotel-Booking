@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Place;
 use Exception;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
@@ -21,7 +22,7 @@ use Yajra\DataTables\DataTables;
  */
 class PlacesController extends Controller
 {
-    public function getPlaces(): Response
+    public function getPlaces(): JsonResponse
     {
         $has_view = false;
         $has_edit = false;
@@ -39,8 +40,6 @@ class PlacesController extends Controller
         return DataTables::of(Place::query())
             ->addColumn('actions', function ($place) use ($has_view, $has_edit, $has_delete) {
                 $view = "";
-                $edit = "";
-                $delete = "";
                 if ($has_view) {
                     $view = view('admin.datatables.action-view')
                         ->with(['route' => route('places.show', ['place' => $place->id])])->render();
@@ -103,23 +102,34 @@ class PlacesController extends Controller
         if (! Gate::allows('create_place')) {
             return abort(401);
         }
+
+//        $request->validate([
+//            'name' => ['required','min:5'],
+//            'description' => ['required','min:20'],
+//            'travel_description' => ['required','min:20'],
+//            'cover' => ['required', 'image','size:1024']
+//        ]);
         $place = new Place();
         $place->name = $request->name;
         $place->slug = Str::slug($request->name);
         $place->description = $request->description;
         $place->travel_description = $request->travel_description;
         $place->user_id = auth()->id();
+        $place->save();
+
         $place->addMediaFromRequest('cover')
             ->toMediaCollection('place-cover');
 
-        foreach ($request->file('images') as $image) {
-            $place->addMedia($image)
-                ->toMediaCollection('places');
+        if($request->file('images')){
+            foreach ($request->file('images') as $image) {
+                $place->addMedia($image)
+                    ->toMediaCollection('places');
+            }
         }
-        $place->save();
+
         flash('Created Successfully')->success();
 
-        return redirect()->action('Admin\PlacesController@index');
+        return redirect(route('places.index'));
     }
 
     /**

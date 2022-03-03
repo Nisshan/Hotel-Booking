@@ -11,6 +11,9 @@
 |
 */
 
+use App\User;
+use function Pest\Laravel\actingAs;
+
 uses(Tests\TestCase::class)->in('Feature');
 
 /*
@@ -39,7 +42,21 @@ expect()->extend('toBeOne', function () {
 |
 */
 
-function something()
+/**
+ * @param $user
+ * @return void
+ */
+function login($user = null)
 {
-    // ..
+    actingAs($user ?? User::factory()->create());
 }
+
+/**
+ * @return User
+ */
+function admin(): User
+{
+    return User::where('email','superadmin@hotel.com')->first();
+}
+
+
