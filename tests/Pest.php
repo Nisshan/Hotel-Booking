@@ -12,6 +12,7 @@
 */
 
 use App\User;
+
 use function Pest\Laravel\actingAs;
 
 uses(Tests\TestCase::class)->in('Feature');
